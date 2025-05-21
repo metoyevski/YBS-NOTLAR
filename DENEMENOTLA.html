@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YBS Temel Kavramlar Öğrenme Uygulaması</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f7; /* Açık mavi-gri ton */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 20px auto;
+            overflow: hidden;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            flex-grow: 1;
+        }
+
+        header {
+            background: #2c3e50; /* Koyu kurumsal mavi */
+            color: #ecf0f1; /* Açık gri */
+            padding: 1.2rem 0;
+            text-align: center;
+            border-bottom: #3498db 4px solid; /* Parlak mavi */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            background: #34495e; /* Biraz daha açık koyu mavi */
+            color: #fff;
+            padding: 0.7rem;
+            text-align: center;
+            margin-bottom: 25px;
+            border-radius: 0 0 8px 8px;
+        }
+
+        nav button {
+            background: #5d6d7e; /* Orta gri-mavi */
+            color: #fff;
+            border: none;
+            padding: 12px 18px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 0.95em;
+        }
+
+        nav button:hover, nav button.active {
+            background: #3498db; /* Parlak mavi */
+            transform: translateY(-2px);
+        }
+
+        .section {
+            display: none;
+            padding: 20px;
+            border: 1px solid #bdc3c7; /* Açık gri sınır */
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #f8f9fa; /* Çok açık gri */
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 0;
+        }
+        h3 {
+            color: #34495e;
+        }
+
+        /* Sözlük Stilleri */
+        #glossarySearch {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .glossary-item {
+            background-color: #e9ecef; /* Açık gri */
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 5px solid #3498db;
+            border-radius: 5px;
+        }
+        .glossary-item strong {
+            color: #2980b9; /* Biraz daha koyu mavi */
+        }
+
+        /* Oyun Stilleri */
+        .game-container, .interactive-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .drag-area, .drop-area-container {
+            border: 2px dashed #aeb6bf; /* Gri kesikli çizgi */
+            padding: 15px;
+            min-height: 120px;
+            border-radius: 8px;
+            background-color: #fff;
+            flex: 1;
+            min-width: 250px;
+        }
+        .drag-area h3, .drop-area-container h3 {
+            margin-top: 0;
+            text-align: center;
+            color: #34495e;
+        }
+        .draggable {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            margin: 8px;
+            border-radius: 5px;
+            cursor: grab;
+            text-align: center;
+            display: inline-block;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            background-color: #ecf0f1; /* Açık gri */
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #d5dbdb; /* Daha açık gri sınır */
+            min-height: 50px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .drop-zone h4 { margin-top: 0; color: #2c3e50; }
+        .drop-zone.over {
+            background-color: #bdc3c7; /* Orta gri */
+        }
+        .game-button {
+            background-color: #27ae60; /* Yeşil */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        .game-button.reset {
+            background-color: #e74c3c; /* Kırmızı */
+        }
+        .game-button:hover { opacity: 0.9; }
+
+        /* Test Stilleri */
+        .quiz-question {
+            background-color: #fdfefe;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7e9;
+        }
+        .quiz-options label {
+            display: block;
+            background-color: #e9ecef;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .quiz-options label:hover {
+            background-color: #d4dae0;
+        }
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Geri Bildirim Stilleri */
+        .feedback {
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Skorlama Stilleri */
+        #scoreBoard {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        #scoreBoard h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        #scoreBoard p { margin: 8px 0; }
+
+        /* Tablo Stilleri */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        /* Diğer Stiller */
+        .info-box {
+            background-color: #e8f6f3;
+            border-left: 5px solid #1abc9c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .dimension-box {
+            border: 1px solid #3498db;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            background-color: #fff;
+        }
+        .dimension-box h4 { color: #2980b9; }
+
+
+        /* Mobil Uyum */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            nav button {
+                padding: 10px 12px;
+                font-size: 0.9em;
+                margin: 3px;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            .game-container, .interactive-area {
+                flex-direction: column;
+            }
+            .drag-area, .drop-area-container {
+                width: auto;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #2c3e50;
+            color: #ecf0f1;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>YBS Temel Kavramlar Öğrenme Uygulaması</h1>
+    </header>
+
+    <nav>
+        <button onclick="showSection('home')">Ana Sayfa</button>
+        <button onclick="showSection('glossary')">Temel Kavramlar</button>
+        <button onclick="showSection('bsDimensions')">BS Boyutları</button>
+        <button onclick="showSection('bsFunctions')">BS Fonksiyonları Oyunu</button>
+        <button onclick="showSection('bsElements')">BS Unsurları Oyunu</button>
+        <button onclick="showSection('mgmtDepartments')">Yönetimsel Bölümler</button>
+        <button onclick="showSection('quiz')">Kısa Test</button>
+        <button onclick="showSection('progress')">İlerleme</button>
+    </nav>
+
+    <div class="container">
+        <!-- Ana Sayfa Bölümü -->
+        <div id="home" class="section active">
+            <h2>Hoş Geldiniz!</h2>
+            <p>Bu uygulama, Yönetim Bilişim Sistemleri (YBS) dersinin temel kavramlarını interaktif bir şekilde öğrenmenize yardımcı olmak için tasarlanmıştır.</p>
+            <p>Uygulama içerisinde aşağıdaki konuları bulabilirsiniz:</p>
+            <ul>
+                <li>Veri, Enformasyon ve Bilgi kavramları</li>
+                <li>Bilişim, Yönetim ve Sistem tanımları</li>
+                <li>Bilişim Sistemlerinin Boyutları, Fonksiyonları ve Unsurları</li>
+                <li>İşlevlerine Göre Yönetimsel Bölümler</li>
+                <li>Bilişim Sistemlerinin Faydaları ve YBS'nin tanımı</li>
+            </ul>
+            <p>Yukarıdaki menüden istediğiniz bölüme geçiş yaparak öğrenmeye başlayabilirsiniz. İyi çalışmalar!</p>
+            <div class="info-box">
+                <h3>Bilişim Sistemlerinin Faydaları</h3>
+                <ul>
+                    <li>Etkinlik ve verimlilik artarken maliyetlerin azaltılması.</li>
+                    <li>Daha kaliteli, katma değeri yüksek ürün ve hizmetler.</li>
+                    <li>Daha az iş gücü (bazı durumlarda).</li>
+                    <li>Daha etkin kontrol mekanizmaları ve daha az hata.</li>
+                    <li>Daha sağlıklı iletişim ve haberleşme.</li>
+                    <li>Rekabet avantajı.</li>
+                </ul>
+            </div>
+            <div class="info-box">
+                <h3>Yönetim Bilişim Sistemleri (YBS - MIS) Nedir?</h3>
+                <p>Organizasyonun yönetim seviyesinde çalışır. Öncelikle planlama, kontrol ve karar almaya yönelik hizmetler verir. Erişim yetkilerini yönetir ve yönetime haftalık, aylık, yıllık sonuç raporları sunar.</p>
+            </div>
+        </div>
+
+        <!-- Kavramlar Sözlüğü Bölümü -->
+        <div id="glossary" class="section">
+            <h2>Temel Kavramlar Sözlüğü</h2>
+            <input type="text" id="glossarySearch" onkeyup="filterGlossary()" placeholder="Terim ara...">
+            <div id="glossaryContent"></div>
+        </div>
+
+        <!-- Bilişim Sistemi Boyutları -->
+        <div id="bsDimensions" class="section">
+            <h2>Bilişim Sistemlerinin Üç Boyutu</h2>
+            <p>Bir bilişim sistemi, organizasyonel, yönetimsel ve teknolojik boyutlardan oluşur. Bu boyutlar birbirleriyle etkileşim içindedir.</p>
+            <div class="interactive-area">
+                <div class="dimension-box">
+                    <h4>ORGANİZASYON</h4>
+                    <p>İşletmenin yapısı, hiyerarşisi, iş süreçleri, kültürü ve politikaları gibi unsurları içerir. Bilişim sistemleri bu organizasyonel yapı içinde çalışır ve onu destekler.</p>
+                </div>
+                <div class="dimension-box">
+                    <h4>YÖNETİM</h4>
+                    <p>Strateji belirleme, karar verme, koordinasyon, liderlik ve kontrol gibi işlevleri kapsar. Yöneticiler, bilişim sistemlerini bu görevleri yerine getirmek için kullanır.</p>
+                </div>
+                <div class="dimension-box">
+                    <h4>TEKNOLOJİ</h4>
+                    <p>Donanım, yazılım, veritabanları ve telekomünikasyon gibi bilişim altyapısını oluşturur. Bilişim sistemlerinin çalışabilmesi için gerekli araçlardır.</p>
+                </div>
+            </div>
+            <p><em>Not: Notlarınızdaki "org1.png" görseli bu üç boyutu ve aralarındaki ilişkiyi göstermektedir.</em></p>
+            <h3>Boyutları Tanıyalım</h3>
+            <div id="dimensionQuizContainer"></div>
+            <button class="game-button" onclick="checkDimensionAnswers()">Cevapları Kontrol Et</button>
+            <div id="dimensionFeedback" class="feedback"></div>
+        </div>
+
+        <!-- Bilişim Sistemi Fonksiyonları Oyunu Bölümü -->
+        <div id="bsFunctions" class="section">
+            <h2>Bilişim Sistemi Fonksiyonları Oyunu</h2>
+            <p>Aşağıdaki örnek olayları doğru bilişim sistemi fonksiyonu (Girdi, İşlem, Çıktı) ile eşleştirin.</p>
+            <div id="bsFunctionsGameContainer">
+                <!-- Oyun JS ile yüklenecek -->
+            </div>
+            <button class="game-button" onclick="checkBsFunctionsAnswers()">Cevapları Kontrol Et</button>
+            <div id="bsFunctionsFeedback" class="feedback"></div>
+        </div>
+
+        <!-- Bilişim Sistemi Unsurları Oyunu Bölümü -->
+        <div id="bsElements" class="section">
+            <h2>Bilişim Sistemi Unsurları Oyunu</h2>
+            <p>Aşağıdaki örnekleri ait oldukları Bilişim Sistemi Unsuru (Donanım, Yazılım, Veritabanı, İnsan, Prosedürler) kutucuğuna sürükleyip bırakın.</p>
+            <div class="game-container">
+                <div class="drag-area">
+                    <h3>Sürüklenecek Örnekler</h3>
+                    <div id="draggableElements"></div>
+                </div>
+                <div class="drop-area-container">
+                    <h3>Bilişim Sistemi Unsurları</h3>
+                    <div id="donanimDropZone" class="drop-zone" data-type="Donanım"><h4>Donanım</h4></div>
+                    <div id="yazilimDropZone" class="drop-zone" data-type="Yazılım"><h4>Yazılım</h4></div>
+                    <div id="veritabaniDropZone" class="drop-zone" data-type="Veritabanı"><h4>Veritabanı</h4></div>
+                    <div id="insanDropZone" class="drop-zone" data-type="İnsan"><h4>İnsan</h4></div>
+                    <div id="prosedurDropZone" class="drop-zone" data-type="Prosedürler"><h4>Prosedürler</h4></div>
+                </div>
+            </div>
+            <button class="game-button" onclick="checkBsElementsAnswers()">Cevapları Kontrol Et</button>
+            <button class="game-button reset" onclick="resetBsElementsGame()">Oyunu Sıfırla</button>
+            <div id="bsElementsFeedback" class="feedback"></div>
+            <p><em>Not: Notlarınızdaki "bilisimsistemunsur.png" görseli bu unsurların birbiriyle etkileşimini göstermektedir.</em></p>
+        </div>
+        
+        <!-- İşlevlerine Göre Yönetimsel Bölümler -->
+        <div id="mgmtDepartments" class="section">
+            <h2>İşlevlerine Göre Yönetimsel Bölümler ve Amaçları</h2>
+            <p>Aşağıdaki tabloda işletmelerdeki temel yönetimsel bölümler ve amaçları listelenmiştir. Amaçları doğru bölümle eşleştirmeye çalışın.</p>
+            <table id="mgmtDeptTable">
+                <thead>
+                    <tr>
+                        <th>Yönetimsel Bölüm</th>
+                        <th>Amaç (Doğru olanı seçin)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS ile yüklenecek -->
+                </tbody>
+            </table>
+            <button class="game-button" onclick="checkMgmtDeptAnswers()">Cevapları Kontrol Et</button>
+            <div id="mgmtDeptFeedback" class="feedback"></div>
+        </div>
+
+        <!-- Kısa Test Bölümü -->
+        <div id="quiz" class="section">
+            <h2>Kısa Test: YBS Temel Kavramlar</h2>
+            <div id="quizContainer"></div>
+            <button class="game-button" onclick="submitQuiz()">Testi Bitir</button>
+            <div id="quizFeedback" class="feedback"></div>
+            <div id="quizScore"></div>
+        </div>
+        
+        <!-- İlerleme Takibi Bölümü -->
+        <div id="progress" class="section">
+            <h2>Skorlama ve İlerleme Takibi</h2>
+            <div id="scoreBoard">
+                <h3>Genel Başarı Durumu</h3>
+                <p>BS Fonksiyonları Oyunu Skoru: <span id="bsFunctionsGameScore">0</span>/<span id="bsFunctionsGameTotal">0</span></p>
+                <p>BS Unsurları Oyunu Skoru: <span id="bsElementsGameScore">0</span>/<span id="bsElementsGameTotal">0</span></p>
+                <p>Yönetimsel Bölümler Oyunu Skoru: <span id="mgmtDeptGameScore">0</span>/<span id="mgmtDeptGameTotal">0</span></p>
+                <p>BS Boyutları Test Skoru: <span id="dimensionQuizScore">0</span>/<span id="dimensionQuizTotal">0</span></p>
+                <p>Kısa Test Skoru: <span id="quizTotalScore">0</span>/<span id="quizTotalQuestions">0</span></p>
+                <hr>
+                <p><strong>Toplam Başarı: <span id="overallScore">0</span>%</strong></p>
+            </div>
+            <button class="game-button reset" onclick="resetProgress()">Tüm İlerlemeyi Sıfırla</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 YBS Temel Kavramlar Öğrenme Uygulaması</p>
+    </footer>
+
+    <script>
+        // --- Global Veriler ---
+        const glossaryData = [
+            { term: "Veri", definition: "İşlenmemiş bilgidir. Bilginin ham hâlidir. Tek başına bir anlamı yoktur, bir araya gelerek işlenip anlamlı bir hâle yani bilgi hâline gelirler." },
+            { term: "Enformasyon", definition: "Verinin işlenmesi, organize edilmesi ve yapılandırılmasıyla elde edilen anlamlı bir çıktıdır. Bilgi ile eş anlamlı kullanılabilir." },
+            { term: "Bilgi", definition: "Verinin hesaplama, sınıflandırma, düzenleme vb. çeşitli işlemlere (process) tâbi tutularak işlenmesi sonucu elde edilir." },
+            { term: "Bilişim (Enformatik)", definition: "İnsanoğlunun teknik, ekonomik ve toplumsal alanlardaki iletişiminde kullandığı ve bilimin dayanağı olan bilginin özellikle elektronik makineler aracılığıyla düzenli ve akla uygun bir biçimde işlenmesi bilimi. Ham bilgi yani verilerin bir takım işlemler sonucunda yöneticiler için faydalı biçime dönüştürülmesini sağlar." },
+            { term: "Yönetim", definition: "Üretim faktörlerini etkin ve verimli bir şekilde bir araya getirerek amaçlara ulaşma süreci. En önemli görevi kavramsal bir kaynak olan doğru bilgiyi kullanarak karar verme ve çözüm süreçlerini yürütmektir." },
+            { term: "Sistem", definition: "Belli bir sınır içerisinde birbiriyle ilişkili unsurların faaliyetleriyle girdileri çıktılara dönüştüren varlıklar bütünü." },
+            { term: "Bilişim Sistemi", definition: "Verileri, hesaplama, sınıflandırma, düzenleme vb. işlemler ile bilgiye dönüştürüp kullanıcılara sunan, girdisi veri, çıktısı bilgi olan sistemlerdir. Süreçlerde hız ve maliyet düşürücü etkileriyle işletmelere ciddi rekabet avantajı sağlayabilirler." },
+            { term: "Girdi (Input)", definition: "Bir bilişim sisteminde ham yani işlenmemiş verinin bulunması ve toplanması faaliyetidir. Örn: Çalışanların fazla mesai yaptığı saatlerin sisteme girilmesi." },
+            { term: "İşlem (Process)", definition: "İşlenmemiş ham verinin, faydalı çıktılara dönüştürülmesi için hesaplama, sıralama, seçme vb. süreçlere tâbi tutulmasıdır. Örn: Toplam fazla mesai ücretinin hesaplanması." },
+            { term: "Çıktı (Output)", definition: "Faydalı bilginin çeşitli biçimlerde, genellikle belgeler ve raporlar şeklinde üretilmesidir. Örn: Fazla mesai raporu." },
+            { term: "Donanım", definition: "Girdiyi işleyerek çıktı üreten bilgisayar bileşenleri. Örn: Klavye, barkod okuyucu, yazıcı, anakart." },
+            { term: "Yazılım", definition: "Bilgisayara üzerinde işlem gerçekleştirmeyi sağlayan programlar. Örn: İşletim sistemi, uygulama programları." },
+            { term: "Veritabanı", definition: "Verilerin toplanmasını ve bilginin organize edilmesini sağlar. Örn: Tablolar, formlar, raporlar." },
+            { term: "İnsan", definition: "Bilgi sistemlerinin en önemli elemanıdır. Bilgisayar sistemini yöneten, çalıştıran, programlayan ve bakımını sağlayan kişi. Örn: Yönetici, sistem analisti, programcı." },
+            { term: "Prosedürler", definition: "Bilgi sistemini çalıştırmak için kullanıcıların kullandığı stratejiler, politikalar, metotlar ve kuralları içerir. Örn: Strateji, politika, kural, yetkiler." }
+        ];
+
+        const bsFunctionGameData = [
+            { example: "Bir müşterinin sipariş formunu sisteme girmek.", correctAnswer: "Girdi" },
+            { example: "Girilen sipariş kalemlerinin toplam tutarını hesaplamak.", correctAnswer: "İşlem" },
+            { example: "Hesaplanan sipariş tutarını fatura olarak yazdırmak.", correctAnswer: "Çıktı" },
+            { example: "Yeni bir çalışanın kişisel bilgilerini kaydetmek.", correctAnswer: "Girdi" },
+            { example: "Aylık satış verilerini analiz ederek trendleri belirlemek.", correctAnswer: "İşlem" },
+            { example: "Belirlenen satış trendlerini bir grafik üzerinde göstermek.", correctAnswer: "Çıktı" }
+        ];
+        const bsFunctionOptions = ["Girdi", "İşlem", "Çıktı"];
+
+        const bsElementGameData = [
+            { name: "Klavye", type: "Donanım" },
+            { name: "Windows İşletim Sistemi", type: "Yazılım" },
+            { name: "Müşteri Bilgileri Tablosu", type: "Veritabanı" },
+            { name: "Sistem Analisti", type: "İnsan" },
+            { name: "Veri Yedekleme Politikası", type: "Prosedürler" },
+            { name: "Barkod Okuyucu", type: "Donanım" },
+            { name: "Microsoft Word", type: "Yazılım" },
+            { name: "Programcı", type: "İnsan" }
+        ];
+        let currentDraggableElement = null;
+
+        const mgmtDepartmentData = [
+            { department: "Satış ve Pazarlama", purpose: "Organizasyonun hizmet ve ürünlerini satma" },
+            { department: "Üretim", purpose: "Ürün ve/veya hizmet oluşturma" },
+            { department: "Finans", purpose: "Organizasyonun finansmanını yönetme" },
+            { department: "Muhasebe", purpose: "Organizasyonun finansal kayıtları ile gelir ve gider kalemlerinin hesabını tutma" },
+            { department: "İnsan Kaynakları", purpose: "Kuruma nitelikli iş gücü kazandırma ve Çalışan kayıtlarını tutma" }
+        ];
+        const allPurposes = mgmtDepartmentData.map(item => item.purpose);
+
+        const dimensionQuizData = [
+            { question: "İşletmenin yapısı, hiyerarşisi ve iş süreçleri hangi bilişim sistemi boyutuna aittir?", answer: "ORGANİZASYON" },
+            { question: "Strateji belirleme ve karar verme süreçleri hangi bilişim sistemi boyutunu ifade eder?", answer: "YÖNETİM" },
+            { question: "Donanım, yazılım ve veritabanları hangi bilişim sistemi boyutunun temelini oluşturur?", answer: "TEKNOLOJİ" }
+        ];
+        const dimensionOptions = ["ORGANİZASYON", "YÖNETİM", "TEKNOLOJİ"];
+
+        const quizQuestions = [
+            {
+                question: "Verinin işlenmesi, organize edilmesi ve yapılandırılmasıyla elde edilen anlamlı çıktıya ne denir?",
+                options: ["Ham Veri", "Enformasyon/Bilgi", "Sistem", "Prosedür"],
+                answer: "Enformasyon/Bilgi"
+            },
+            {
+                question: "Bilişim sisteminin 'Girdi, İşlem, Çıktı' olarak adlandırılan temel faaliyetlerine ne denir?",
+                options: ["Unsurları", "Boyutları", "Fonksiyonları", "Faydaları"],
+                answer: "Fonksiyonları"
+            },
+            {
+                question: "Aşağıdakilerden hangisi bir bilişim sisteminin 'İnsan' unsuruna örnektir?",
+                options: ["Yazıcı", "İşletim Sistemi", "Veri Giriş Kuralları", "Veritabanı Yöneticisi"],
+                answer: "Veritabanı Yöneticisi"
+            },
+            {
+                question: "Bilişim sistemini çalıştırmak için kullanıcıların kullandığı stratejiler, politikalar, metotlar ve kurallar bütününe ne ad verilir?",
+                options: ["Donanım", "Yazılım", "Prosedürler", "Veritabanı"],
+                answer: "Prosedürler"
+            },
+            {
+                question: "Organizasyonun finansmanını yönetme amacı hangi yönetimsel bölüme aittir?",
+                options: ["Satış ve Pazarlama", "Üretim", "Finans", "İnsan Kaynakları"],
+                answer: "Finans"
+            },
+            {
+                question: "YBS (Yönetim Bilişim Sistemleri) öncelikle hangi yönetimsel faaliyetlere hizmet verir?",
+                options: ["Sadece veri toplama", "Planlama, kontrol ve karar alma", "Donanım bakımı", "Yazılım geliştirme"],
+                answer: "Planlama, kontrol ve karar alma"
+            }
+        ];
+
+        let scores = {
+            bsFunctionsGame: { correct: 0, total: bsFunctionGameData.length },
+            bsElementsGame: { correct: 0, total: bsElementGameData.length },
+            mgmtDeptGame: { correct: 0, total: mgmtDepartmentData.length },
+            dimensionQuiz: { correct: 0, total: dimensionQuizData.length },
+            quiz: { correct: 0, total: quizQuestions.length }
+        };
+
+        // --- Sayfa Yönlendirme ---
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            const activeButton = Array.from(document.querySelectorAll('nav button')).find(
+                btn => btn.onclick.toString().includes(`'${sectionId}'`)
+            );
+            if (activeButton) activeButton.classList.add('active');
+
+            if (sectionId === 'glossary') initGlossary();
+            if (sectionId === 'bsDimensions') initDimensionQuiz();
+            if (sectionId === 'bsFunctions') initBsFunctionsGame();
+            if (sectionId === 'bsElements') initBsElementsGame();
+            if (sectionId === 'mgmtDepartments') initMgmtDeptGame();
+            if (sectionId === 'quiz') initQuiz();
+            if (sectionId === 'progress') updateScoreBoard();
+        }
+
+        // --- Sözlük ---
+        function initGlossary() { renderGlossary(glossaryData); }
+        function renderGlossary(data) {
+            const gc = document.getElementById('glossaryContent');
+            gc.innerHTML = data.map(item => `<div class="glossary-item"><strong>${item.term}:</strong> ${item.definition}</div>`).join('');
+        }
+        function filterGlossary() {
+            const st = document.getElementById('glossarySearch').value.toLowerCase();
+            const fd = glossaryData.filter(item => item.term.toLowerCase().includes(st) || item.definition.toLowerCase().includes(st));
+            renderGlossary(fd);
+        }
+
+        // --- BS Boyutları Testi ---
+        function initDimensionQuiz() {
+            const container = document.getElementById('dimensionQuizContainer');
+            container.innerHTML = '';
+            scores.dimensionQuiz.correct = 0;
+            dimensionQuizData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-question';
+                let optionsHtml = dimensionOptions.map(opt => `
+                    <label><input type="radio" name="dim_q${index}" value="${opt}"> ${opt}</label>
+                `).join('');
+                div.innerHTML = `<p><strong>Soru ${index + 1}:</strong> ${item.question}</p><div class="quiz-options">${optionsHtml}</div>`;
+                container.appendChild(div);
+            });
+            document.getElementById('dimensionFeedback').innerHTML = '';
+            updateScoreBoard();
+        }
+        function checkDimensionAnswers() {
+            scores.dimensionQuiz.correct = 0;
+            let allAnswered = true;
+            dimensionQuizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="dim_q${index}"]:checked`);
+                if (selected) {
+                    if (selected.value === item.answer) scores.dimensionQuiz.correct++;
+                } else {
+                    allAnswered = false;
+                }
+            });
+            const feedback = document.getElementById('dimensionFeedback');
+            if (!allAnswered) {
+                feedback.textContent = "Lütfen tüm soruları cevaplayın.";
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            feedback.textContent = `Boyutlar testinden ${scores.dimensionQuiz.correct}/${dimensionQuizData.length} doğru yaptınız.`;
+            feedback.className = scores.dimensionQuiz.correct === dimensionQuizData.length ? 'feedback correct' : 'feedback incorrect';
+            updateScoreBoard();
+        }
+
+        // --- BS Fonksiyonları Oyunu ---
+        function initBsFunctionsGame() {
+            const container = document.getElementById('bsFunctionsGameContainer');
+            container.innerHTML = '';
+            scores.bsFunctionsGame.correct = 0;
+            bsFunctionGameData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-question'; // Stil benzerliği için
+                let optionsHtml = bsFunctionOptions.map(opt => `
+                    <label><input type="radio" name="func_q${index}" value="${opt}"> ${opt}</label>
+                `).join('');
+                div.innerHTML = `<p><strong>Örnek ${index + 1}:</strong> ${item.example}</p><div class="quiz-options">${optionsHtml}</div>`;
+                container.appendChild(div);
+            });
+            document.getElementById('bsFunctionsFeedback').innerHTML = '';
+            updateScoreBoard();
+        }
+        function checkBsFunctionsAnswers() {
+            scores.bsFunctionsGame.correct = 0;
+            let allAnswered = true;
+            bsFunctionGameData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="func_q${index}"]:checked`);
+                if (selected) {
+                    if (selected.value === item.correctAnswer) scores.bsFunctionsGame.correct++;
+                } else {
+                    allAnswered = false;
+                }
+            });
+            const feedback = document.getElementById('bsFunctionsFeedback');
+            if (!allAnswered) {
+                feedback.textContent = "Lütfen tüm örnekler için bir fonksiyon seçin.";
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            feedback.textContent = `Fonksiyonlar oyununda ${scores.bsFunctionsGame.correct}/${bsFunctionGameData.length} doğru yaptınız.`;
+            feedback.className = scores.bsFunctionsGame.correct === bsFunctionGameData.length ? 'feedback correct' : 'feedback incorrect';
+            updateScoreBoard();
+        }
+
+        // --- BS Unsurları Oyunu ---
+        function initBsElementsGame() {
+            const dragContainer = document.getElementById('draggableElements');
+            dragContainer.innerHTML = '';
+            scores.bsElementsGame.correct = 0;
+            const shuffledElements = [...bsElementGameData].sort(() => Math.random() - 0.5);
+            shuffledElements.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'draggable';
+                div.textContent = item.name;
+                div.draggable = true;
+                div.id = `elem-${item.name.replace(/\s+/g, '-')}`;
+                div.dataset.type = item.type;
+                div.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', e.target.id); currentDraggableElement = e.target; });
+                dragContainer.appendChild(div);
+            });
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.innerHTML = `<h4>${zone.dataset.type}</h4>`; // Başlığı koru
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+                zone.addEventListener('dragleave', e => zone.classList.remove('over'));
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggable = document.getElementById(id);
+                    if (draggable && currentDraggableElement) zone.appendChild(draggable);
+                    currentDraggableElement = null;
+                });
+            });
+            document.getElementById('bsElementsFeedback').innerHTML = '';
+            updateScoreBoard();
+        }
+        function checkBsElementsAnswers() {
+            scores.bsElementsGame.correct = 0;
+            let allPlaced = true;
+            bsElementGameData.forEach(item => {
+                const element = document.getElementById(`elem-${item.name.replace(/\s+/g, '-')}`);
+                if (element && element.parentElement.classList.contains('drop-zone')) {
+                    const parentZoneType = element.parentElement.dataset.type;
+                    if (item.type === parentZoneType) {
+                        scores.bsElementsGame.correct++;
+                        element.style.backgroundColor = '#2ecc71'; // Yeşil
+                    } else {
+                        element.style.backgroundColor = '#e74c3c'; // Kırmızı
+                    }
+                } else {
+                    allPlaced = false; // Sürüklenmemiş öğe var
+                }
+            });
+            const feedback = document.getElementById('bsElementsFeedback');
+            if (!allPlaced && document.getElementById('draggableElements').children.length > 0) {
+                 feedback.textContent = `Lütfen tüm örnekleri uygun unsurlara sürükleyin. Şu ana kadar ${scores.bsElementsGame.correct} doğru.`;
+                 feedback.className = 'feedback incorrect';
+            } else if (scores.bsElementsGame.correct === bsElementGameData.length) {
+                feedback.textContent = `Tebrikler! Tüm ${bsElementGameData.length} örneği doğru unsurlarla eşleştirdiniz.`;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `${bsElementGameData.length} örnekten ${scores.bsElementsGame.correct} tanesini doğru eşleştirdiniz. Yanlış olanlar kırmızı ile işaretlendi.`;
+                feedback.className = 'feedback incorrect';
+            }
+            updateScoreBoard();
+        }
+        function resetBsElementsGame() { initBsElementsGame(); }
+        
+        // --- Yönetimsel Bölümler Oyunu ---
+        function initMgmtDeptGame() {
+            const tbody = document.querySelector('#mgmtDeptTable tbody');
+            tbody.innerHTML = '';
+            scores.mgmtDeptGame.correct = 0;
+            const shuffledDepts = [...mgmtDepartmentData].sort(() => Math.random() - 0.5);
+            shuffledDepts.forEach((item, index) => {
+                const row = tbody.insertRow();
+                row.insertCell().textContent = item.department;
+                const selectCell = row.insertCell();
+                const select = document.createElement('select');
+                select.name = `dept_q${index}`;
+                select.innerHTML = `<option value="">Amaç Seçin</option>` + 
+                                 allPurposes.sort(() => Math.random() - 0.5).map(p => `<option value="${p}">${p}</option>`).join('');
+                selectCell.appendChild(select);
+            });
+            document.getElementById('mgmtDeptFeedback').innerHTML = '';
+            updateScoreBoard();
+        }
+        function checkMgmtDeptAnswers() {
+            scores.mgmtDeptGame.correct = 0;
+            let allAnswered = true;
+            const rows = document.querySelectorAll('#mgmtDeptTable tbody tr');
+            rows.forEach((row, index) => {
+                const deptName = row.cells[0].textContent;
+                const selectedPurpose = row.querySelector('select').value;
+                const correctItem = mgmtDepartmentData.find(d => d.department === deptName);
+
+                if (selectedPurpose === "") {
+                    allAnswered = false;
+                } else if (correctItem && selectedPurpose === correctItem.purpose) {
+                    scores.mgmtDeptGame.correct++;
+                    row.style.backgroundColor = '#d4edda';
+                } else {
+                    row.style.backgroundColor = '#f8d7da';
+                }
+            });
+            const feedback = document.getElementById('mgmtDeptFeedback');
+            if (!allAnswered) {
+                feedback.textContent = "Lütfen tüm bölümler için bir amaç seçin.";
+                feedback.className = 'feedback incorrect';
+                return;
+            }
+            feedback.textContent = `Yönetimsel Bölümler oyununda ${scores.mgmtDeptGame.correct}/${mgmtDepartmentData.length} doğru yaptınız.`;
+            feedback.className = scores.mgmtDeptGame.correct === mgmtDepartmentData.length ? 'feedback correct' : 'feedback incorrect';
+            updateScoreBoard();
+        }
+
+        // --- Kısa Test ---
+        function initQuiz() {
+            const qc = document.getElementById('quizContainer');
+            qc.innerHTML = '';
+            scores.quiz.correct = 0;
+            quizQuestions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'quiz-question';
+                let optsHtml = q.options.map(opt => `<label><input type="radio" name="q${index}" value="${opt}"> ${opt}</label>`).join('');
+                div.innerHTML = `<p><strong>Soru ${index + 1}:</strong> ${q.question}</p><div class="quiz-options">${optsHtml}</div><div id="feedback-q${index}" class="feedback" style="display:none; text-align:left; margin-top:5px;"></div>`;
+                qc.appendChild(div);
+            });
+            document.getElementById('quizFeedback').innerHTML = '';
+            document.getElementById('quizScore').innerHTML = '';
+            updateScoreBoard();
+        }
+        function submitQuiz() {
+            scores.quiz.correct = 0;
+            let allAnswered = true;
+            quizQuestions.forEach((q, index) => {
+                const sel = document.querySelector(`input[name="q${index}"]:checked`);
+                const qFeedback = document.getElementById(`feedback-q${index}`);
+                qFeedback.style.display = 'block';
+                if (sel) {
+                    if (sel.value === q.answer) {
+                        scores.quiz.correct++;
+                        qFeedback.textContent = `Doğru! 🎉`;
+                        qFeedback.className = 'feedback correct';
+                    } else {
+                        qFeedback.textContent = `Yanlış. Doğru cevap: ${q.answer}.`;
+                        qFeedback.className = 'feedback incorrect';
+                    }
+                } else {
+                    allAnswered = false;
+                    qFeedback.textContent = `Cevaplanmadı. Doğru cevap: ${q.answer}.`;
+                    qFeedback.className = 'feedback incorrect';
+                }
+            });
+            const feedback = document.getElementById('quizFeedback');
+            const scoreDiv = document.getElementById('quizScore');
+            if (!allAnswered) {
+                feedback.textContent = "Lütfen tüm soruları cevaplayın.";
+                feedback.className = 'feedback incorrect';
+                scoreDiv.innerHTML = '';
+                return;
+            }
+            scoreDiv.innerHTML = `<h3>Test Sonucu: ${scores.quiz.correct}/${quizQuestions.length} doğru.</h3>`;
+            feedback.textContent = scores.quiz.correct === quizQuestions.length ? "Harika! Testteki tüm soruları doğru yanıtladınız!" : "Test tamamlandı. Sonuçlarınızı yukarıda görebilirsiniz.";
+            feedback.className = scores.quiz.correct === quizQuestions.length ? 'feedback correct' : 'feedback';
+            updateScoreBoard();
+        }
+        
+        // --- Skorlama ---
+        function updateScoreBoard() {
+            document.getElementById('bsFunctionsGameScore').textContent = scores.bsFunctionsGame.correct;
+            document.getElementById('bsFunctionsGameTotal').textContent = scores.bsFunctionsGame.total;
+            document.getElementById('bsElementsGameScore').textContent = scores.bsElementsGame.correct;
+            document.getElementById('bsElementsGameTotal').textContent = scores.bsElementsGame.total;
+            document.getElementById('mgmtDeptGameScore').textContent = scores.mgmtDeptGame.correct;
+            document.getElementById('mgmtDeptGameTotal').textContent = scores.mgmtDeptGame.total;
+            document.getElementById('dimensionQuizScore').textContent = scores.dimensionQuiz.correct;
+            document.getElementById('dimensionQuizTotal').textContent = scores.dimensionQuiz.total;
+            document.getElementById('quizTotalScore').textContent = scores.quiz.correct;
+            document.getElementById('quizTotalQuestions').textContent = scores.quiz.total;
+
+            let totalCorrect = scores.bsFunctionsGame.correct + scores.bsElementsGame.correct + scores.mgmtDeptGame.correct + scores.dimensionQuiz.correct + scores.quiz.correct;
+            let totalPossible = scores.bsFunctionsGame.total + scores.bsElementsGame.total + scores.mgmtDeptGame.total + scores.dimensionQuiz.total + scores.quiz.total;
+            
+            document.getElementById('overallScore').textContent = totalPossible > 0 ? ((totalCorrect / totalPossible) * 100).toFixed(0) : 0;
+            localStorage.setItem('ybsAppScores', JSON.stringify(scores));
+        }
+        function loadScores() {
+            const saved = localStorage.getItem('ybsAppScores');
+            if (saved) scores = JSON.parse(saved);
+            // Total'leri güncelle (veri değişirse)
+            scores.bsFunctionsGame.total = bsFunctionGameData.length;
+            scores.bsElementsGame.total = bsElementGameData.length;
+            scores.mgmtDeptGame.total = mgmtDepartmentData.length;
+            scores.dimensionQuiz.total = dimensionQuizData.length;
+            scores.quiz.total = quizQuestions.length;
+        }
+        function resetProgress() {
+            if (confirm("Tüm ilerlemenizi ve skorlarınızı sıfırlamak istediğinizden emin misiniz?")) {
+                scores = {
+                    bsFunctionsGame: { correct: 0, total: bsFunctionGameData.length },
+                    bsElementsGame: { correct: 0, total: bsElementGameData.length },
+                    mgmtDeptGame: { correct: 0, total: mgmtDepartmentData.length },
+                    dimensionQuiz: { correct: 0, total: dimensionQuizData.length },
+                    quiz: { correct: 0, total: quizQuestions.length }
+                };
+                localStorage.removeItem('ybsAppScores');
+                updateScoreBoard();
+                // Aktif bölümleri de sıfırla
+                ['bsDimensions', 'bsFunctions', 'bsElements', 'mgmtDepartments', 'quiz'].forEach(id => {
+                    if (document.getElementById(id).classList.contains('active')) {
+                        if(id === 'bsDimensions') initDimensionQuiz();
+                        if(id === 'bsFunctions') initBsFunctionsGame();
+                        if(id === 'bsElements') initBsElementsGame();
+                        if(id === 'mgmtDepartments') initMgmtDeptGame();
+                        if(id === 'quiz') initQuiz();
+                    }
+                });
+                alert("İlerlemeniz sıfırlandı.");
+            }
+        }
+
+        // --- Başlangıç ---
+        window.onload = () => {
+            loadScores();
+            showSection('home');
+        };
+    </script>
+</body>
+</html>

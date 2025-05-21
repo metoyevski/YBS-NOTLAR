@@ -52,121 +52,94 @@
             color: #bdc3c7;
         }
 
-        /* Kategorik Menü Stilleri */
-        .nav-container {
-            background: #2c3e50; /* Koyu mavi-gri */
+        /* NEW NAVIGATION CSS (from btaltyapi.html) */
+        nav {
+            background: #2c3e50; 
             color: #fff;
-            padding: 0.3rem 0;
-            margin-bottom: 30px;
-            border-radius: 0 0 10px 10px;
-        }
-        
-        .nav-categories {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 5px 0;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .nav-category {
-            flex: 1 1 300px;
-            margin: 5px;
-            position: relative;
-        }
-        
-        .category-title {
-            background: #1a5276;
-            color: #f0f4f8;
-            padding: 8px 12px;
-            font-size: 0.9em;
-            font-weight: 600;
+            padding: 0; 
             text-align: center;
-            border-radius: 6px 6px 0 0;
-            border-bottom: 2px solid #3498db;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px; 
+            display: flex; 
+            justify-content: center; 
         }
-        
-        .category-buttons {
-            background: #34495e;
-            padding: 8px;
-            border-radius: 0 0 6px 6px;
+        nav ul { 
+            list-style: none;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: wrap; 
             justify-content: center;
-            gap: 8px;
         }
-        
-        .category-buttons button, .category-buttons .button-link {
-            background: #566573;
+        nav ul li { 
+            margin: 0;
+        }
+        nav ul li a { 
+            display: block;
             color: #fff;
-            border: none;
-            padding: 10px 15px;
-            margin: 2px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
-            font-weight: 500;
             text-decoration: none;
-            display: inline-block;
-        }
-        
-        .category-buttons button:hover, .category-buttons .button-link:hover {
-            background: #2980b9;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .category-buttons button.active, .category-buttons .button-link.active {
-            background: #1a5276; /* Daha koyu mavi */
-            color: #f9e79f; /* Açık sarı metin */
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            font-weight: 600;
-            border-bottom: 3px solid #f9e79f;
-        }
-        
-        nav button, nav .button-link {
-            background: #566573;
-            color: #fff;
-            border: none;
-            padding: 10px 15px;
-            margin: 2px;
-            cursor: pointer;
-            border-radius: 6px;
+            padding: 0.8rem 1rem; 
             transition: background-color 0.3s ease, transform 0.2s ease;
-            font-size: 0.95em;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
+            font-size: 1em; 
+            font-weight: 500; 
         }
-        
-        nav button:hover, nav button.active, nav .button-link:hover, nav .button-link.active {
-            background: #2980b9; /* Aktif/hover için parlak mavi */
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        nav ul li a:hover,
+        nav ul li a.active { 
+            background: #2980b9;
+            transform: translateY(-2px); 
         }
-        
-        nav button.active, nav .button-link.active {
-            background: #1a5276; /* Daha koyu mavi */
-            color: #f9e79f; /* Açık sarı metin */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            font-weight: 600;
-            border-bottom: 3px solid #f9e79f;
+        nav ul li.dropdown {
+            position: relative; 
+        }
+        nav ul li.dropdown > a.nav-link-dropdown::after {
+            content: ' ▾'; 
+            font-size: 0.8em;
+        }
+        nav ul ul.submenu {
+            display: none; 
+            position: absolute;
+            top: 100%; 
+            left: 0;
+            background-color: #34495e; 
+            padding: 0;
+            min-width: 280px; /* Adjusted min-width for longer BD titles */
+            z-index: 1000;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        nav ul li.dropdown:hover > ul.submenu { /* Restored hover to open */
+            display: block;
+        }
+        nav ul ul.submenu li {
+            width: 100%;
+        }
+        nav ul ul.submenu li a {
+            padding: 0.7rem 1rem;
+            white-space: nowrap; 
+            text-align: left; /* Ensure submenu items are left-aligned */
+        }
+        nav ul ul.submenu li a:hover,
+        nav ul ul.submenu li a.active { 
+            background-color: #2980b9;
         }
         
         /* Mobil Uyum */
-        @media (max-width: 768px) {
-            .nav-categories {
-                flex-direction: column;
+        @media (max-width: 900px) {
+            nav ul { flex-direction: column; align-items: stretch; }
+            nav ul li a { text-align: left; padding-left: 1rem; }
+            nav ul ul.submenu {
+                position: static; 
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                background-color: #465a6e; 
             }
-            .nav-category {
-                flex: 1 1 100%;
+            nav ul ul.submenu li a {
+                padding-left: 2rem; 
             }
-            nav button, nav .button-link {
-                font-size: 0.9em;
-                padding: 8px 12px;
+            nav ul li.dropdown > a.nav-link-dropdown::after {
+                float: right; 
+                margin-right: 1rem;
             }
         }
 
@@ -873,60 +846,49 @@
         <h1>Bilişim Sistemleri, Organizasyon ve Strateji</h1>
     </header>
 
-    <div class="nav-container">
-        <nav class="nav-categories">
-            <div class="nav-category">
-                <div class="category-title">Ana Sayfalar</div>
-                <div class="category-buttons">
-                    <button onclick="location.href='index.html'">Genel Ana Sayfa</button>
-                    <button onclick="showSection('home')">Modül Ana Sayfa</button>
-                </div>
-            </div>
-            
-            <div class="nav-category">
-                <div class="category-title">Temel Kavramlar</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('organizasyonTemelleri')">Organizasyon Temelleri</button>
-                    <button onclick="showSection('bsEtkileri')">BS Etkileri</button>
-                    <button onclick="showSection('ekonomikTeoriler')">Ekonomik Teoriler</button>
-                </div>
-            </div>
-            
-            <div class="nav-category">
-                <div class="category-title">Stratejik Analizler</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('porter5guc')">Porter'ın 5 Güç Modeli</button>
-                    <button onclick="showSection('yikiciTeknolojiler')">Yıkıcı Teknolojiler</button>
-                    <button onclick="showSection('organizasyonelYapilar')">Organizasyonel Yapılar</button>
-                </div>
-            </div>
-            
-            <div class="nav-category">
-                <div class="category-title">Örgütsel Dinamikler</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('davranissalEtkiler')">Davranışsal Etkiler</button>
-                    <button onclick="showSection('postSektoryelOrg')">Post-Sektöryel Org.</button>
-                    <button onclick="showSection('degisimDirenci')">Değişim Direnci</button>
-                </div>
-            </div>
-            
-            <div class="nav-category">
-                <div class="category-title">Teknoloji & Ağlar</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('internetVeOrg')">İnternet ve Org.</button>
-                    <button onclick="showSection('intranetExtranet')">İntranet & Ekstranet</button>
-                    <button onclick="showSection('vpnDns')">VPN & DNS</button>
-                </div>
-            </div>
-
-            <div class="nav-category">
-                <div class="category-title">Oyunlar & Testler</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('quiz')">Kısa Test</button>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Ana Menü</a></li>
+            <li><a href="#home" class="nav-link">Modül Ana Sayfa</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Temel Kavramlar</a>
+                <ul class="submenu">
+                    <li><a href="#organizasyonTemelleri" class="nav-link">Organizasyon Temelleri</a></li>
+                    <li><a href="#bsEtkileri" class="nav-link">BS Etkileri</a></li>
+                    <li><a href="#ekonomikTeoriler" class="nav-link">Ekonomik Teoriler</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Stratejik Analizler</a>
+                <ul class="submenu">
+                    <li><a href="#porter5guc" class="nav-link">Porter'ın 5 Güç Modeli</a></li>
+                    <li><a href="#yikiciTeknolojiler" class="nav-link">Yıkıcı Teknolojiler</a></li>
+                    <li><a href="#organizasyonelYapilar" class="nav-link">Organizasyonel Yapılar</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Örgütsel Dinamikler</a>
+                <ul class="submenu">
+                    <li><a href="#davranissalEtkiler" class="nav-link">Davranışsal Etkiler</a></li>
+                    <li><a href="#postSektoryelOrg" class="nav-link">Post-Sektöryel Org.</a></li>
+                    <li><a href="#degisimDirenci" class="nav-link">Değişim Direnci</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Teknoloji & Ağlar</a>
+                <ul class="submenu">
+                    <li><a href="#intranetExtranet" class="nav-link">İntranet & Ekstranet</a></li>
+                    <li><a href="#vpnDns" class="nav-link">VPN & DNS</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Oyunlar & Testler</a>
+                <ul class="submenu">
+                    <li><a href="#quiz" class="nav-link">Test</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
     
     <div class="container">
         <div id="home" class="section active">
@@ -1672,7 +1634,7 @@
     </div>
 
     <footer>
-        <p>© 2024 Bilişim Sistemleri, Organizasyon ve Strateji Modülü</p>
+        <p>© 2025 Strateji ve Organizasyon Öğrenme Uygulaması</p>
     </footer>
 
     <script>
@@ -1688,33 +1650,28 @@
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
-                currentSectionId = sectionId;
+                currentSectionId = sectionId; // currentSectionId is already global
             }
             
-            // Ana menüdeki TÜM butonları güncelle (header > nav içindeki butonlar ve linkler)
-            document.querySelectorAll('header > nav button, header > nav a.button-link, .nav-categories button, .nav-categories .button-link').forEach(b => {
-                b.classList.remove('active');
-                
-                // Butonun onclick değerini kontrol et
-                const onclickValue = b.getAttribute('onclick');
-                if (onclickValue && onclickValue.includes(`showSection('${sectionId}'`)) {
-                    b.classList.add('active');
-                }
-            });
-            
+            // Active link highlighting will be handled by updateActiveLink
+            // updateActiveLink(sectionId); // This will be called by the nav link click handler
+
             // Alt modüller için başlatıcı fonksiyonlar
             if (sectionId === 'intranetExtranet' && typeof intExt_initAlistirma === 'function') {
                 intExt_initAlistirma();
             }
             if (sectionId === 'vpnDns' && typeof vpnDns_showSection === 'function') {
-                vpnDns_showSection('vpnDns_home');
-                if(typeof vpnDns_loadScores === 'function') vpnDns_loadScores(); // Bu fonksiyon tanımlıysa çağır
+                vpnDns_showSection('vpnDns_home'); // Always show home of sub-module first
+                if(typeof vpnDns_loadScores === 'function') vpnDns_loadScores(); 
             }
             if (sectionId === 'porter5guc' && typeof porter5guc_showSection === 'function') {
-                porter5guc_showSection('porter5guc_home');
-                // KALDİLDİ: if(typeof porter5guc_updateProgressDisplay === 'function') porter5guc_updateProgressDisplay(); 
+                porter5guc_showSection('porter5guc_home'); // Always show home of sub-module first
+                 if(typeof porter5guc_updateProgressDisplay === 'function') porter5guc_updateProgressDisplay();
             }
-            if (sectionId === 'progress' && typeof updateModuleScoreBoard === 'function') {
+            if (sectionId === 'quiz' && typeof initQuiz === 'function') { // Ensure quiz is initialized when shown
+                initQuiz();
+            }
+            if (sectionId === 'moduleProgress' && typeof updateModuleScoreBoard === 'function') { // Renamed from 'progress' to 'moduleProgress'
                 updateModuleScoreBoard();
             }
             
@@ -1762,6 +1719,9 @@
             if (typeof vpnDns_loadScores === 'function') {
                 // vpnDns_loadScores(); // Example: if you have a separate load scores from storage function
             }
+
+            initializeNavigation(); // Initialize new navigation
+            updateActiveLink(currentSectionId); // Set initial active link
         };
 
         // --- İntranet/Ekstranet Alıştırması için Veri ve Fonksiyonlar ---
@@ -3305,6 +3265,126 @@
                 answer: "Tedarik edilen girdinin benzersiz olması ve az sayıda tedarikçiden gelmesi"
             }
         ];
+
+        // --- NEW NAVIGATION JS FUNCTIONS (from btaltyapi.html) ---
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('nav ul a.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) { 
+                    event.preventDefault(); 
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) { 
+                        const sectionId = href.substring(1);
+                        showSection(sectionId); 
+                        updateActiveLink(sectionId); 
+
+                        // Close all dropdowns when a section link is clicked (if hover isn't solely managing this)
+                        // This might be redundant if CSS :hover is solely responsible for submenu visibility
+                        document.querySelectorAll('nav ul li.dropdown ul.submenu.open').forEach(submenu => {
+                           // submenu.classList.remove('open'); // Commented out, hover should handle this
+                        });
+                    }
+                });
+            });
+            
+            // Dropdown toggle click (not strictly needed for hover, but good for accessibility/mobile if CSS fails)
+            // For now, since it's hover-based, this part can be omitted or simplified.
+            // If click-to-open is desired later, this can be expanded.
+            /*
+            document.querySelectorAll('nav ul li.dropdown > a.nav-link-dropdown').forEach(ddLink => {
+                ddLink.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    const parentLi = this.parentElement; 
+                    const submenu = parentLi.querySelector('ul.submenu'); 
+                    if (submenu) {
+                        // Optional: Close other open submenus
+                        document.querySelectorAll('nav ul li.dropdown ul.submenu.open').forEach(otherSubmenu => {
+                            if (otherSubmenu !== submenu) {
+                                otherSubmenu.classList.remove('open');
+                            }
+                        });
+                        submenu.classList.toggle('open'); 
+                    }
+                });
+            });
+            */
+        }
+
+        function updateActiveLink(targetOrSectionId) {
+            const allNavLinksAndToggles = document.querySelectorAll('nav ul a');
+            allNavLinksAndToggles.forEach(link => link.classList.remove('active'));
+
+            let activeLinkElement = null;
+            let sectionIdToMatch = '';
+
+            if (typeof targetOrSectionId === 'string') {
+                sectionIdToMatch = targetOrSectionId;
+                 // Try to find a direct link first
+                activeLinkElement = document.querySelector(`nav ul a.nav-link[href="#${sectionIdToMatch}"]`);
+            } else if (targetOrSectionId && targetOrSectionId.nodeName === 'A') {
+                activeLinkElement = targetOrSectionId;
+                const href = activeLinkElement.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    sectionIdToMatch = href.substring(1);
+                }
+            }
+
+            if (activeLinkElement) {
+                activeLinkElement.classList.add('active');
+                const parentSubmenu = activeLinkElement.closest('ul.submenu');
+                if (parentSubmenu) {
+                    const dropdownLi = parentSubmenu.closest('li.dropdown');
+                    if (dropdownLi) {
+                        const parentToggle = dropdownLi.querySelector('a.nav-link-dropdown');
+                        if (parentToggle) {
+                            parentToggle.classList.add('active');
+                        }
+                    }
+                }
+            } else if (sectionIdToMatch) {
+                // If sectionIdToMatch is from a submodule (e.g., vpnDns_home), 
+                // we need to activate the main module link (e.g., #vpnDns)
+                let mainModuleLink = null;
+                if (sectionIdToMatch.startsWith('vpnDns_')) {
+                    mainModuleLink = document.querySelector(`nav ul a.nav-link[href="#vpnDns"]`);
+                } else if (sectionIdToMatch.startsWith('porter5guc_')) {
+                    mainModuleLink = document.querySelector(`nav ul a.nav-link[href="#porter5guc"]`);
+                } else if (sectionIdToMatch.startsWith('intExt_')) {
+                     mainModuleLink = document.querySelector(`nav ul a.nav-link[href="#intranetExtranet"]`);
+                }
+                // Add more else if for other submodules if necessary
+
+                if (mainModuleLink) {
+                     mainModuleLink.classList.add('active');
+                     const parentSubmenu = mainModuleLink.closest('ul.submenu');
+                     if (parentSubmenu) {
+                         const dropdownLi = parentSubmenu.closest('li.dropdown');
+                         if (dropdownLi) {
+                             const parentToggle = dropdownLi.querySelector('a.nav-link-dropdown');
+                             if (parentToggle) {
+                                 parentToggle.classList.add('active');
+                             }
+                         }
+                     }
+                } else {
+                    // Fallback for direct section links if no specific submodule logic matched
+                    const linkForSection = document.querySelector(`nav ul a.nav-link[href="#${sectionIdToMatch}"]`);
+                    if (linkForSection) {
+                        linkForSection.classList.add('active');
+                        const parentSubmenu = linkForSection.closest('ul.submenu');
+                        if (parentSubmenu) {
+                            const dropdownLi = parentSubmenu.closest('li.dropdown');
+                            if (dropdownLi) {
+                                const parentToggle = dropdownLi.querySelector('a.nav-link-dropdown');
+                                if (parentToggle) {
+                                    parentToggle.classList.add('active');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
     </script>
 </body>

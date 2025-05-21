@@ -47,28 +47,86 @@
         nav {
             background: #2c3e50;
             color: #fff;
-            padding: 0.8rem;
+            padding: 0; /* Adjusted padding for ul based nav */
             text-align: center;
             margin-bottom: 30px;
             border-radius: 0 0 10px 10px;
+            display: flex; /* Added for centering ul */
+            justify-content: center; /* Added for centering ul */
         }
-        nav button {
-            background: #566573;
+        nav ul { /* New style for the navigation list */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center;
+        }
+        nav ul li { /* New style for list items */
+            margin: 0;
+        }
+        nav ul li a { /* New style for navigation links */
+            display: block;
             color: #fff;
-            border: none;
-            padding: 12px 20px;
-            margin: 6px;
-            cursor: pointer;
-            border-radius: 6px;
+            text-decoration: none;
+            padding: 0.8rem 1rem; /* Adjust padding as needed */
             transition: background-color 0.3s ease, transform 0.2s ease;
-            font-size: 1em;
-            font-weight: 500;
+            font-size: 1em; /* Consistent with old button font-size */
+            font-weight: 500; /* Consistent with old button font-weight */
         }
-        nav button:hover, nav button.active {
+
+        nav ul li a:hover,
+        nav ul li a.active { /* Combined hover and active styles */
             background: #2980b9;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px); /* Subtle lift effect */
         }
+
+        /* Dropdown Menu Styles */
+        nav ul li.dropdown {
+            position: relative; /* Needed for absolute positioning of submenu */
+        }
+
+        nav ul li.dropdown > a::after { /* Add dropdown arrow */
+            content: ' ▾'; /* Simple down arrow */
+            font-size: 0.8em;
+        }
+
+        nav ul ul.submenu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 100%; /* Position below the parent */
+            left: 0;
+            background-color: #34495e; /* Slightly lighter than main nav for distinction */
+            padding: 0;
+            min-width: 200px; /* Or adjust as needed */
+            z-index: 1000;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        nav ul li.dropdown:hover > ul.submenu {
+            display: block; /* Show on hover */
+        }
+
+        nav ul ul.submenu li {
+            width: 100%;
+        }
+
+        nav ul ul.submenu li a {
+            padding: 0.7rem 1rem;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        nav ul ul.submenu li a:hover,
+        nav ul ul.submenu li a.active { /* Style for active/hover submenu items */
+            background-color: #2980b9;
+        }
+        /* End Dropdown Menu Styles */
+
+        /* Remove old button styles or ensure they don't conflict if parts are reused by other elements */
+        /* nav button { ... } */
+        /* nav button:hover, nav button.active { ... } */
+
         .section {
             display: none;
             padding: 25px;
@@ -512,8 +570,7 @@
              .nav-categories {
                  flex-wrap: wrap;
              }
-             .nav-category {
-             }
+  
          }
          @media (max-width: 900px) {
              .nav-categories {
@@ -530,51 +587,178 @@
                  padding: 8px 12px;
              }
          }
+
+        .podcast-play-button {
+            background-color: #27ae60; /* Green */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Circular button */
+            width: 40px;
+            height: 40px;
+            font-size: 20px; /* Icon size */
+            line-height: 40px; /* Center icon vertically */
+            text-align: center;
+            cursor: pointer;
+            margin-right: 10px; /* Changed from margin-left */
+            transition: background-color 0.3s;
+            vertical-align: middle; /* Align with heading */
+        }
+        .podcast-play-button:hover {
+            background-color: #2ecc71; /* Lighter green */
+        }
+
+        .podcast-duration {
+            font-size: 0.9em;
+            margin-left: 5px;
+            color: #555;
+            vertical-align: middle;
+        }
+
+        .playback-speed-controls button {
+            background-color: #bdc3c7;
+            color: #2c3e50;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.3s;
+            vertical-align: middle;
+        }
+        .playback-speed-controls button:hover {
+            background-color: #95a5a6;
+        }
+        .playback-speed-controls button.active-speed {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Styles for pyramid synchronization */
+        .pyramid-section {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+        }
+        .pyramid-highlight-dim .pyramid-section:not(.pyramid-highlight-active) {
+            opacity: 0.5;
+        }
+        .pyramid-highlight-active {
+            opacity: 1 !important; /* Ensure active is fully visible */
+            border: 2px solid #e67e22; /* A distinct but not overly aggressive color */
+            background-color: rgba(230, 126, 34, 0.05); /* Very subtle background tint */
+            transform: scale(1.02);
+            box-shadow: 0 0 12px rgba(230, 126, 34, 0.4);
+            border-radius: 6px; /* Match existing border radius if any, or add a new one */
+        }
+        /* Ensure specific targeted elements like labels also get highlighting if they are direct targets */
+        .level-label-group.pyramid-highlight-active,
+        .pyramid-core-level-detailed.pyramid-highlight-active,
+        .functional-areas-detailed-row.pyramid-highlight-active,
+        div.detailed-pyramid-representation.pyramid-highlight-active {
+             opacity: 1 !important;
+             border: 2px solid #e67e22;
+             background-color: rgba(230, 126, 34, 0.05);
+             transform: scale(1.01); /* Slight scale for labels might be better */
+             box-shadow: 0 0 12px rgba(230, 126, 34, 0.4);
+             border-radius: 6px;
+             padding: 5px; /* Add some padding so border isn't too tight */
+             margin: -5px; /* Counteract padding to maintain layout */
+        }
+
+
+        .modules-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Styles for comparison table synchronization */
+        #comparisonTable.table-dim-inactive th,
+        #comparisonTable.table-dim-inactive td {
+            opacity: 0.6;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        #comparisonTable th.table-highlight-primary,
+        #comparisonTable td.table-highlight-primary,
+        #comparisonTable tr.table-highlight-primary > td, /* Apply to all cells in a primary highlighted row */
+        #comparisonTable tr.table-highlight-primary > th {
+            opacity: 1 !important;
+            background-color: rgba(70, 130, 180, 0.15); /* Light steel blue tint for primary */
+            border: 1px dashed #4682b4; /* Steel blue dashed border */
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out, border 0.3s ease-in-out;
+        }
+
+        #comparisonTable th.table-highlight-secondary,
+        #comparisonTable td.table-highlight-secondary {
+            opacity: 1 !important;
+            background-color: rgba(255, 165, 0, 0.25); /* Brighter orange tint for secondary */
+            border: 2px solid #ffa500; /* Solid orange border */
+            transform: scale(1.03);
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out, border 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative; /* For z-index if needed, and better transform behavior */
+            z-index: 10;
+        }
+        /* Ensure row header cells also get highlighted if they are primary target */
+         #comparisonTable td.table-highlight-primary {
+             font-weight: bold; /* Make text bold for primary row header */
+         }
+
+        /* ADD NEW Micro-Highlight Style */
+        .table-cell-micro-highlight {
+            background-color: #ffe082 !important; /* A light, distinct yellow */
+            border: 2px solid #ffc107 !important; /* A matching, sharper border */
+            opacity: 1 !important;
+            transition: background-color 0.05s linear, border-color 0.05s linear; /* Fast, sharp transition */
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+            position: relative; /* Ensures border and shadow are drawn correctly */
+            z-index: 20; /* Above other elements if any overlap */
+        }
+         /* For full table highlight, just a border might be less intrusive */
+        #comparisonTable.table-cell-micro-highlight {
+            border: 3px solid #ffc107 !important;
+            background-color: transparent !important; /* No background for the whole table container */
+            box-shadow: 0 0 12px rgba(255, 193, 7, 0.6);
+        }
+         #comparisonTableTitle.table-cell-micro-highlight {
+             background-color: #fff9c4 !important; /* Lighter yellow for title */
+             border: 2px dashed #ffeb3b !important;
+             padding: 2px 5px;
+             border-radius: 4px;
+             display: inline-block; /* To make padding and border wrap title content */
+        }
+
     </style>
 </head>
 <body>
     <header>
-        <h1>Kurumsal Bilişim Sistemleri</h1>
+        <h1>Kurumsal Bilişim Sistemleri ve Uygulamaları</h1>
+        <p>Etkileşimli Öğrenme Modülü</p>
     </header>
-
-    <div class="nav-container">
-        <nav class="nav-categories">
-            <div class="nav-category">
-                <div class="category-title">Genel</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('home')">Ana Sayfa</button>
-                    <button onclick="location.href='index.html'">İndekse Dön</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Sistem Türleri</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('systemTypes')">BS Türleri</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Fonksiyonel Sistemler</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('functionalSystems')">Fonksiyonel BS'ler</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Oyunlar & Testler</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('levelGame')">Düzey Eşleştirme</button>
-                    <button onclick="showSection('functionalGame')">Fonksiyonel Sistem Tanıma</button>
-                    <button onclick="showSection('systemComparison')">Sistem Karşılaştırma</button>
-                    <button onclick="showSection('quiz')">Test</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">İlerleme</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('progress')">İlerleme</button>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Modül İçeriği</a>
+                <ul class="submenu">
+                    <li><a href="#home" class="nav-link">Kurumlardaki Temel Bilişim Sistemleri</a></li>
+                    <li><a href="#systemTypes" class="nav-link">KBS Türleri</a></li>
+                    <li><a href="#functionalSystems" class="nav-link">Fonksiyonel Alanlar</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Oyun Merkezi</a>
+                <ul class="submenu">
+                    <li><a href="#levelGame" class="nav-link">Organizasyonel Düzey Eşleştirme Oyunu</a></li>
+                    <li><a href="#functionalGame" class="nav-link">Fonksiyonel Sistem Tanıma Oyunu</a></li>
+                    <li><a href="#systemComparison" class="nav-link">Sistem Karşılaştırma Oyunu</a></li>
+                </ul>
+            </li>
+            <li><a href="#quiz" class="nav-link">Quiz</a></li>
+            <li><a href="#progress" class="nav-link">İlerleme</a></li>
+        </ul>
+    </nav>
 
     <div class="container">
         <!-- Ana Sayfa Bölümü -->
@@ -599,28 +783,38 @@
                 <p><strong>Bilişim (Bilgi) Sistemleri:</strong> İş süreçlerini geliştirmek için bilgi sağlar.</p>
             </div>
 
-            <h3>Kurumlardaki Temel Bilişim Sistemleri</h3>
-            <p>Organizasyonlar, bilişim sistemleri ve iş süreçleri birbirleriyle sıkı sıkıya bağlıdır. Bilişim sistemleri, iş süreçlerinin daha verimli yönetilmesine olanak tanırken, organizasyonel yapı da bu sistemlerin etkinliğini doğrudan etkiler. Kurumsal uygulamalar, bu entegrasyonu sağlayarak genel performansı artırır.</p>
-            <p>Bilişim sistemleri, farklı organizasyonel düzeylerdeki kullanıcıların ihtiyaçlarına göre çeşitlenir. Bu düzeyler genellikle Operasyonel, Yönetim ve Stratejik olarak sınıflandırılır.</p>
-            
-            <!-- Eski Piramit Başlangıcı - Burası Değişecek -->
-            <div class="detailed-pyramid-representation">
-                <div class="pyramid-kind-title-area"><h4 class="pyramid-section-title">BİLİŞİM SİSTEMİ TÜRLERİ</h4></div>
-                <div class="pyramid-group-title-area"><h4 class="pyramid-section-title">HİZMET EDİLEN GRUPLAR</h4></div>
+            <h3>
+                <button id="podcastPlayButton1" class="podcast-play-button" onclick="togglePodcast('podcastPlayer1', 'SESLER/kurumtemelbilisim1.wav', this)">&#9658;</button>
+                <span id="podcastDuration1" class="podcast-duration"></span> 
+                Kurumlardaki Temel Bilişim Sistemleri
+                <div id="playbackSpeedControls1" class="playback-speed-controls" style="display: inline-block; margin-left: 15px;">
+                    <button onclick="setPlaybackSpeed('podcastPlayer1', 0.75, this)">0.75x</button>
+                    <button onclick="setPlaybackSpeed('podcastPlayer1', 1, this)" class="active-speed">1x</button>
+                    <button onclick="setPlaybackSpeed('podcastPlayer1', 1.25, this)">1.25x</button>
+                    <button onclick="setPlaybackSpeed('podcastPlayer1', 1.5, this)">1.5x</button>
+                    <button onclick="setPlaybackSpeed('podcastPlayer1', 2, this)">2x</button>
+                </div>
+            </h3>
+            <audio id="podcastPlayer1" style="display: none;"></audio>
 
-                <div class="pyramid-kind-labels-area">
-                    <div class="level-label-group">Stratejik Düzey Sistemler</div>
-                    <div class="level-label-group">Yönetim Düzeyi Sistemler</div>
-                    <div class="level-label-group">Operasyonel Düzey Sistemler</div>
+            <!-- Eski Piramit Başlangıcı - Burası Değişecek -->
+            <div id="pyramidDiagram" class="detailed-pyramid-representation">
+                <div class="pyramid-kind-title-area pyramid-section"><h4 class="pyramid-section-title">BİLİŞİM SİSTEMİ TÜRLERİ</h4></div>
+                <div class="pyramid-group-title-area pyramid-section"><h4 class="pyramid-section-title">HİZMET EDİLEN GRUPLAR</h4></div>
+
+                <div class="pyramid-kind-labels-area pyramid-section">
+                    <div id="pyramid-strat-label-left" class="level-label-group pyramid-section">Stratejik Düzey Sistemler</div>
+                    <div id="pyramid-mgmt-label-left" class="level-label-group pyramid-section">Yönetim Düzeyi Sistemler</div>
+                    <div id="pyramid-op-label-left" class="level-label-group pyramid-section">Operasyonel Düzey Sistemler</div>
                 </div>
 
-                <div class="pyramid-core-area">
+                <div class="pyramid-core-area pyramid-section">
                     <div class="pyramid-core-structure">
-                        <div class="pyramid-core-level-detailed strategic-core-detailed">
+                        <div id="pyramid-strat-core" class="pyramid-core-level-detailed strategic-core-detailed pyramid-section">
                             <span class="system-block-name">ESS</span>
                             <span class="system-block-desc">Yönetici Destek Sistemleri</span>
                         </div>
-                        <div class="pyramid-core-level-detailed management-core-detailed">
+                        <div id="pyramid-mgmt-core" class="pyramid-core-level-detailed management-core-detailed pyramid-section">
                             <div>
                                 <span class="system-block-name">MIS</span>
                                 <span class="system-block-desc">Yönetim Bilişim Sis.</span>
@@ -630,20 +824,20 @@
                                 <span class="system-block-desc">Karar Destek Sis.</span>
                             </div>
                         </div>
-                        <div class="pyramid-core-level-detailed operational-core-detailed">
+                        <div id="pyramid-op-core" class="pyramid-core-level-detailed operational-core-detailed pyramid-section">
                             <span class="system-block-name">TPS</span>
                             <span class="system-block-desc">İşlem İşleme Sistemleri</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="pyramid-group-labels-area">
-                    <div class="level-label-group">Üst Düzey Yöneticiler</div>
-                    <div class="level-label-group">Orta Kademe Yöneticiler</div>
-                    <div class="level-label-group">Operasyonel Yöneticiler</div>
+                <div class="pyramid-group-labels-area pyramid-section">
+                    <div id="pyramid-strat-label-right" class="level-label-group pyramid-section">Üst Düzey Yöneticiler</div>
+                    <div id="pyramid-mgmt-label-right" class="level-label-group pyramid-section">Orta Kademe Yöneticiler</div>
+                    <div id="pyramid-op-label-right" class="level-label-group pyramid-section">Operasyonel Yöneticiler</div>
                 </div>
                 
-                <div class="functional-areas-detailed-row">
+                <div id="pyramid-func-areas" class="functional-areas-detailed-row pyramid-section">
                     <div class="functional-area-item-detailed">
                         <strong>Satış ve Pazarlama</strong>
                         <small>Sipariş İşleme</small>
@@ -774,6 +968,17 @@
             <p><strong>Geleneksel Firmalarda:</strong> Sistemler birbirinden kopuk olabilir. Baştan sona kesintisiz bir akış söz konusu olmayabilir, bu da etkinlik ve iş değeri açısından sorunlar yaratabilir.</p>
         </div>
 
+        <!-- Yeni Oyun Merkezi Bölümü -->
+        <div id="gamesHub" class="section">
+            <h2>Oyun Merkezi</h2>
+            <p>Aşağıdaki oyun modüllerinden birini seçerek etkileşimli öğrenmeye devam edebilirsiniz:</p>
+            <ul style="list-style-type: disc; padding-left: 40px;">
+                <li style="margin-bottom: 10px;"><a href="javascript:void(0);" onclick="showSection('levelGame'); updateActiveLink('levelGame');" style="text-decoration: underline; color: #1a5276;">Organizasyonel Düzey Eşleştirme Oyunu</a></li>
+                <li style="margin-bottom: 10px;"><a href="javascript:void(0);" onclick="showSection('functionalGame'); updateActiveLink('functionalGame');" style="text-decoration: underline; color: #1a5276;">Fonksiyonel Sistem Tanıma Oyunu</a></li>
+                <li style="margin-bottom: 10px;"><a href="javascript:void(0);" onclick="showSection('systemComparison'); updateActiveLink('systemComparison');" style="text-decoration: underline; color: #1a5276;">Sistem Karşılaştırma Oyunu</a></li>
+            </ul>
+        </div>
+
         <!-- Organizasyonel Düzeyler Oyunu Bölümü -->
         <div id="levelGame" class="section">
             <h2>Organizasyonel Düzey Eşleştirme Oyunu</h2>
@@ -861,8 +1066,23 @@
         <!-- Sistem Karşılaştırma Bölümü -->
         <div id="systemComparison" class="section">
             <h2>Bilişim Sistemi Türleri Karşılaştırması</h2>
+            
+            <div class="podcast-controls" style="margin-bottom: 15px; padding:10px; background-color:#f0f4f8; border-radius:8px;">
+                <button id="podcastPlayButton2" class="podcast-play-button" onclick="togglePodcast('podcastPlayer2', 'SESLER/kurumtemelbilisim2.wav', this, 'comparisonTable')">&#9658;</button>
+                <span id="podcastDuration2" class="podcast-duration"></span>
+                <strong style="margin-left:10px; vertical-align:middle;">Sistem Karşılaştırma Anlatımı</strong>
+               <div id="playbackSpeedControls2" class="playback-speed-controls" style="display: inline-block; margin-left: 15px;">
+                   <button onclick="setPlaybackSpeed('podcastPlayer2', 0.75, this)">0.75x</button>
+                   <button onclick="setPlaybackSpeed('podcastPlayer2', 1, this)" class="active-speed">1x</button>
+                   <button onclick="setPlaybackSpeed('podcastPlayer2', 1.25, this)">1.25x</button>
+                   <button onclick="setPlaybackSpeed('podcastPlayer2', 1.5, this)">1.5x</button>
+                   <button onclick="setPlaybackSpeed('podcastPlayer2', 2, this)">2x</button>
+               </div>
+           </div>
+           <audio id="podcastPlayer2" style="display: none;"></audio>
+
             <p>Farklı sistem türlerinin temel özelliklerini inceleyelim.</p>
-            <table>
+            <table id="comparisonTable"> 
                 <thead>
                     <tr>
                         <th>Özellik</th>
@@ -903,7 +1123,7 @@
                     </tr>
                 </tbody>
             </table>
-             <h3>Karşılaştırma Oyunu</h3>
+            <h3>Karşılaştırma Oyunu</h3>
             <p>Aşağıdaki özellikleri doğru bilişim sistemi türü ile eşleştirin.</p>
             <div id="comparisonGameContainer" class="game-container"></div>
             <button class="game-button" onclick="checkComparisonGameAnswers()">Cevapları Kontrol Et</button>
@@ -944,7 +1164,7 @@
     </div>
 
     <footer>
-        <p>© 2024 Kurumsal Bilişim Sistemleri Öğrenme Uygulaması</p>
+        <p>© 2025 Kurumsal Bilişim Sistemleri Öğrenme Uygulaması</p>
     </footer>
 
     <script>
@@ -1124,7 +1344,7 @@
             levelGame: { correct: 0, total: levelGameData.length },
             functionalGame: { correct: 0, total: functionalGameData.length },
             comparisonGame: { correct: 0, total: comparisonGameData.length },
-            quiz: { correct: 0, total: quizQuestions.length, answered: [] } // Add answered array
+            quiz: { correct: 0, total: quizQuestions.length, answered: [] }
         };
         
         let currentQuestionIndex = 0;
@@ -1144,7 +1364,7 @@
             if (sectionId === 'levelGame') initLevelGame();
             if (sectionId === 'functionalGame') initFunctionalGame();
             if (sectionId === 'systemComparison') initComparisonGame();
-            if (sectionId === 'quiz') initQuiz(); // initQuiz will now handle the new structure
+            if (sectionId === 'quiz') initQuiz();
             if (sectionId === 'progress') updateScoreBoard();
 
             if (elementId) {
@@ -1283,11 +1503,13 @@
             const container = document.getElementById('comparisonGameContainer');
             container.innerHTML = '';
             scores.comparisonGame.correct = 0;
+            scores.comparisonGame.total = comparisonGameData.length;
+
             comparisonGameData.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'game-question';
                 let optionsHtml = systemTypeOptions.map(opt => `
-                    <label><input type="radio" name="comp_q${index}" value="${opt}"> ${opt}</label>
+                    <label><input type="radio" name="comparison_q${index}" value="${opt}"> ${opt}</label>
                 `).join('');
                 div.innerHTML = `<p><strong>Özellik:</strong> ${item.characteristic}</p><div class="game-options">${optionsHtml}</div>`;
                 container.appendChild(div);
@@ -1297,24 +1519,25 @@
         }
 
         function checkComparisonGameAnswers() {
-            scores.comparisonGame.correct = 0;
-            let allAnswered = true;
+            let currentCorrectAnswers = 0;
             comparisonGameData.forEach((item, index) => {
-                const selected = document.querySelector(`input[name="comp_q${index}"]:checked`);
+                const selected = document.querySelector(`input[name="comparison_q${index}"]:checked`);
                 if (selected) {
-                    if (selected.value === item.correctAnswer) scores.comparisonGame.correct++;
-                } else {
-                    allAnswered = false;
+                    if (selected.value === item.correctAnswer) {
+                        currentCorrectAnswers++;
+                    }
                 }
             });
+            scores.comparisonGame.correct = currentCorrectAnswers;
+
             const feedback = document.getElementById('comparisonGameFeedback');
-            if (!allAnswered) {
-                feedback.textContent = "Lütfen tüm özellikler için bir sistem türü seçin.";
+            if (currentCorrectAnswers === comparisonGameData.length) {
+                feedback.className = 'feedback correct';
+                feedback.innerText = 'Tebrikler! Tüm eşleştirmeler doğru!';
+            } else {
                 feedback.className = 'feedback incorrect';
-                return;
+                feedback.innerText = `Bazı eşleştirmeler yanlış. Doğru sayısı: ${currentCorrectAnswers} / ${comparisonGameData.length}`;
             }
-            feedback.textContent = `Sistem Karşılaştırma oyununda ${scores.comparisonGame.correct}/${comparisonGameData.length} doğru yaptınız.`;
-            feedback.className = scores.comparisonGame.correct === comparisonGameData.length ? 'feedback correct' : 'feedback incorrect';
             updateScoreBoard();
         }
 
@@ -1532,7 +1755,7 @@
                     levelGame: { correct: 0, total: levelGameData.length },
                     functionalGame: { correct: 0, total: functionalGameData.length },
                     comparisonGame: { correct: 0, total: comparisonGameData.length },
-                    quiz: { correct: 0, total: quizQuestions.length }
+                    quiz: { correct: 0, total: quizQuestions.length, answered: [] }
                 };
                 localStorage.removeItem('kurumsalBsAppScores');
                 updateScoreBoard();
@@ -1552,8 +1775,218 @@
         // --- Başlangıç ---
         window.onload = () => {
             loadScores();
-            showSection('home');
+            initializeNavigation(); 
+            
+            const initialSectionId = window.location.hash ? window.location.hash.substring(1) : 'home';
+            showSection(initialSectionId);
+            // For initial load, pass the section ID. If it's a game section, updateActiveLink will handle it.
+            updateActiveLink(initialSectionId); 
         };
+
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('nav ul a.nav-link'); // All clickable links including top-level ones
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) { // 'this' will be the clicked <a> tag
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) { 
+                        event.preventDefault(); 
+                        const sectionId = href.substring(1);
+                        showSection(sectionId);
+                        updateActiveLink(this); // Pass the clicked link element itself
+                    }
+                    // External links (like index.html) will navigate normally
+                });
+            });
+            
+            document.querySelectorAll('nav ul li.dropdown > a.nav-link-dropdown').forEach(ddLink => {
+                ddLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // These are not direct links, they just toggle dropdown via CSS hover
+                });
+            });
+        }
+
+        function updateActiveLink(target) { // target can be a section ID (string) or a link element
+            const allNavLinksAndToggles = document.querySelectorAll('nav ul a');
+            allNavLinksAndToggles.forEach(link => link.classList.remove('active'));
+
+            let activeLinkElement = null;
+            let activeSectionId = '';
+
+            if (typeof target === 'string') { // Target is a section ID (e.g., from initial load or game hub click)
+                activeSectionId = target;
+                if (['levelGame', 'functionalGame', 'systemComparison'].includes(activeSectionId)) {
+                    // If a game section is active, highlight the "Oyun Merkezi" top-level link
+                    activeLinkElement = document.querySelector('nav ul > li > a.nav-link[href="#gamesHub"]');
+                } else {
+                    // For other section IDs (including 'home', 'quiz', 'progress', 'systemTypes', etc.)
+                    // find the first nav link that matches this sectionId.
+                    // For 'home', this will default to the 'Giriş' link under 'Modül İçeriği'.
+                    activeLinkElement = document.querySelector(`nav ul a.nav-link[href="#${activeSectionId}"]`);
+                }
+            } else if (target && target.nodeName === 'A') { // Target is the clicked link element
+                activeLinkElement = target;
+            }
+
+            if (activeLinkElement) {
+                activeLinkElement.classList.add('active');
+                const parentDropdown = activeLinkElement.closest('li.dropdown');
+                if (parentDropdown) {
+                    const parentToggle = parentDropdown.querySelector('a.nav-link-dropdown');
+                    if (parentToggle) {
+                        parentToggle.classList.add('active');
+                    }
+                }
+            }
+        }
+
+        function togglePodcast(playerId, audioSrc, buttonElement, relatedTableId = null) {
+            const audioPlayer = document.getElementById(playerId);
+            const durationElement = document.getElementById(buttonElement.id.replace('PlayButton', 'Duration')); // e.g., podcastDuration1
+            const pyramidDiagram = document.getElementById('pyramidDiagram');
+
+            if (!audioPlayer) return;
+
+            // Set src only if it's different or not set yet
+            // For this specific case, we assume audioSrc doesn't change for a given button, so load only if not loaded.
+            let sourceNeedsUpdate = !audioPlayer.currentSrc || !audioPlayer.currentSrc.endsWith(audioSrc);
+
+            if (sourceNeedsUpdate) {
+                audioPlayer.src = audioSrc;
+                audioPlayer.onloadedmetadata = function() {
+                    if (durationElement) {
+                        const minutes = Math.floor(audioPlayer.duration / 60);
+                        const seconds = Math.floor(audioPlayer.duration % 60).toString().padStart(2, '0');
+                        durationElement.textContent = ` (${minutes}:${seconds})`;
+                    }
+                    // Removed seek bar and current time display initialization for podcastPlayer2
+                };
+            }
+
+            if (audioPlayer.paused || audioPlayer.ended) {
+                audioPlayer.play().then(() => {
+                    buttonElement.innerHTML = '&#10074;&#10074;'; // Pause icon
+                    if (playerId === 'podcastPlayer1' && pyramidDiagram) {
+                        audioPlayer.addEventListener('timeupdate', handleTimeUpdatePyramid);
+                        pyramidDiagram.classList.add('pyramid-highlight-dim');
+                    } else if (playerId === 'podcastPlayer2') {
+                        // No event listener for table highlighting or seekbar needed now
+                    }
+                }).catch(error => {
+                    console.error("Error playing audio:", error, playerId);
+                    if (sourceNeedsUpdate) buttonElement.innerHTML = '&#9658;';
+                });
+            } else {
+                audioPlayer.pause();
+                buttonElement.innerHTML = '&#9658;'; // Play icon
+                // Listeners and dimming remain on pause
+            }
+
+            audioPlayer.onended = function() {
+                buttonElement.innerHTML = '&#9658;';
+                audioPlayer.currentTime = 0;
+                if (playerId === 'podcastPlayer1' && pyramidDiagram) {
+                    audioPlayer.removeEventListener('timeupdate', handleTimeUpdatePyramid);
+                    clearPyramidHighlights(); // This also removes dim from pyramidDiagram
+                } else if (playerId === 'podcastPlayer2') {
+                    // No highlighting or seekbar logic to clear/reset
+                }
+            };
+        }
+
+        function setPlaybackSpeed(playerId, speed, speedButtonElement) {
+            const audioPlayer = document.getElementById(playerId);
+            if (audioPlayer) {
+                audioPlayer.playbackRate = speed;
+                // Update active speed button
+                const speedControls = speedButtonElement.parentElement;
+                speedControls.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('active-speed');
+                });
+                speedButtonElement.classList.add('active-speed');
+            }
+        }
+
+        const highlightData = [
+            // 0:01 (and more prominent 0:08): Entire pyramid
+            { timeStart: 1, timeEnd: 12, targets: ['pyramidDiagram'], description: "Full Pyramid Intro" },
+            // 0:13: Operational Level (TPS) + Op. Managers
+            { timeStart: 13, timeEnd: 35, targets: ['pyramid-op-label-left', 'pyramid-op-core', 'pyramid-op-label-right'], description: "Operational Level" },
+            // 0:36: Management Level (MIS/DSS) + Mid. Managers
+            { timeStart: 36, timeEnd: 76, targets: ['pyramid-mgmt-label-left', 'pyramid-mgmt-core', 'pyramid-mgmt-label-right'], description: "Management Level" },
+            // 1:17: Strategic Level (ESS) + Top Managers
+            { timeStart: 77, timeEnd: 98, targets: ['pyramid-strat-label-left', 'pyramid-strat-core', 'pyramid-strat-label-right'], description: "Strategic Level" },
+            // 1:39: Functional Areas row
+            { timeStart: 99, timeEnd: 109, targets: ['pyramid-func-areas'], description: "Functional Areas" } // Assuming audio duration around 1:49 or more.
+        ];
+
+        const allPyramidSectionIds = [
+            'pyramidDiagram',
+            'pyramid-op-label-left', 'pyramid-op-core', 'pyramid-op-label-right',
+            'pyramid-mgmt-label-left', 'pyramid-mgmt-core', 'pyramid-mgmt-label-right',
+            'pyramid-strat-label-left', 'pyramid-strat-core', 'pyramid-strat-label-right',
+            'pyramid-func-areas',
+             // Add titles if they should also be part of the dimming/highlighting individually
+            'pyramidDiagram > .pyramid-kind-title-area', 
+            'pyramidDiagram > .pyramid-group-title-area'
+        ];
+
+
+        function clearPyramidHighlights() {
+            allPyramidSectionIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.classList.remove('pyramid-highlight-active');
+                }
+            });
+             // Also clear from general pyramid sections if ID not specific enough
+            document.querySelectorAll('.pyramid-section').forEach(el => {
+                 el.classList.remove('pyramid-highlight-active');
+            });
+            const pyramidDiagram = document.getElementById('pyramidDiagram');
+            if(pyramidDiagram) pyramidDiagram.classList.remove('pyramid-highlight-dim');
+
+        }
+
+        function handleTimeUpdatePyramid() {
+            const audioPlayer = document.getElementById('podcastPlayer1');
+            const pyramidDiagram = document.getElementById('pyramidDiagram');
+            if (!audioPlayer || !pyramidDiagram) return;
+
+            const currentTime = audioPlayer.currentTime;
+            let activeTargetsFound = false;
+
+            // First, ensure all sections are potentially dimmed if sync is active
+            // The 'pyramid-highlight-dim' class is now added to pyramidDiagram on play start
+            
+            // Remove active from all highlightable elements first
+            allPyramidSectionIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('pyramid-highlight-active');
+            });
+            document.querySelectorAll('.pyramid-section.pyramid-highlight-active').forEach(el => el.classList.remove('pyramid-highlight-active'));
+
+
+            for (const region of highlightData) {
+                if (currentTime >= region.timeStart && currentTime < region.timeEnd) {
+                    activeTargetsFound = true;
+                    region.targets.forEach(targetId => {
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            targetElement.classList.add('pyramid-highlight-active');
+                        }
+                    });
+                    break; // Assuming only one region is active at a time
+                }
+            }
+            
+            if (activeTargetsFound) {
+                pyramidDiagram.classList.add('pyramid-highlight-dim');
+            } else {
+                 // If no region is active, remove dimming effect entirely
+                clearPyramidHighlights(); // also removes pyramid-highlight-dim
+            }
+        }
+
     </script>
 </body>
 </html>

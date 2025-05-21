@@ -48,28 +48,84 @@
         }
 
         nav {
-            background: #37474f; /* Koyu Gri-Mavi */
+            background: #2c3e50; /* Consistent with kurumsal.html */
             color: #fff;
-            padding: 0.6rem;
+            padding: 0; /* Adjusted padding for ul based nav */
             text-align: center;
             margin-bottom: 25px;
+            border-radius: 0 0 10px 10px; /* Consistent with kurumsal.html */
+            display: flex; /* Added for centering ul */
+            justify-content: center; /* Added for centering ul */
         }
 
-        nav button {
-            background: #546e7a; /* Orta Gri-Mavi */
+        nav ul { /* New style for the navigation list */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center;
+        }
+        nav ul li { /* New style for list items */
+            margin: 0;
+        }
+        nav ul li a { /* New style for navigation links */
+            display: block;
             color: #fff;
-            border: none;
-            padding: 10px 18px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            font-size: 0.95em;
+            text-decoration: none;
+            padding: 0.8rem 1rem; /* Adjust padding as needed */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1em; 
+            font-weight: 500; 
         }
 
-        nav button:hover, nav button.active {
-            background: #00796b; /* Orta Yeşil */
+        nav ul li a:hover,
+        nav ul li a.active { /* Combined hover and active styles */
+            background: #00796b; /* Keep module-specific hover color */
+            transform: translateY(-2px); /* Subtle lift effect */
         }
+
+        /* Dropdown Menu Styles */
+        nav ul li.dropdown {
+            position: relative; /* Needed for absolute positioning of submenu */
+        }
+
+        nav ul li.dropdown > a::after { /* Add dropdown arrow */
+            content: ' ▾'; /* Simple down arrow */
+            font-size: 0.8em;
+        }
+
+        nav ul ul.submenu {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 100%; /* Position below the parent */
+            left: 0;
+            background-color: #34495e; /* Consistent with kurumsal.html */
+            padding: 0;
+            min-width: 220px; /* Adjusted for longer text */
+            z-index: 1000;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        nav ul li.dropdown:hover > ul.submenu {
+            display: block; /* Show on hover */
+        }
+
+        nav ul ul.submenu li {
+            width: 100%;
+        }
+
+        nav ul ul.submenu li a {
+            padding: 0.7rem 1rem;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        nav ul ul.submenu li a:hover,
+        nav ul ul.submenu li a.active { /* Style for active/hover submenu items */
+            background-color: #00796b; /* Keep module-specific hover color */
+        }
+        /* End Dropdown Menu Styles */
 
         .section {
             display: none;
@@ -241,7 +297,7 @@
         /* Mobil Uyum */
         @media (max-width: 768px) {
             header h1 { font-size: 1.8em; }
-            nav button { padding: 8px 14px; font-size: 0.9em; }
+            nav ul li a { padding: 0.8rem 0.5rem; font-size: 0.9em; }
             .container { width: 95%; padding: 15px; }
             h2 { font-size: 1.5em; }
             h3 { font-size: 1.3em; }
@@ -264,15 +320,27 @@
     </header>
 
     <nav>
-        <button onclick="showSection('home')">Ana Sayfa</button>
-        <button onclick="showSection('concepts')">Temel Kavramlar</button>
-        <button onclick="showSection('dbmsFeatures')">VTYS ve Özellikleri</button>
-        <button onclick="showSection('dbModels')">Veritabanı Modelleri</button>
-        <button onclick="showSection('termMatchingGame')">Terim Eşleştirme Oyunu</button>
-        <button onclick="showSection('designTrends')">Tasarım ve Trendler</button>
-        <button onclick="showSection('quiz')">Kısa Test</button>
-        <button onclick="showSection('progress')">İlerleme</button>
-        <button onclick="location.href='index.html'">Ana Menüye Dön</button>
+        <ul>
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Modül İçeriği</a>
+                <ul class="submenu">
+                    <li><a href="#home" class="nav-link">Giriş</a></li>
+                    <li><a href="#concepts" class="nav-link">Temel Kavramlar</a></li>
+                    <li><a href="#dbmsFeatures" class="nav-link">VTYS ve Özellikleri</a></li>
+                    <li><a href="#dbModels" class="nav-link">Veritabanı Modelleri</a></li>
+                    <li><a href="#designTrends" class="nav-link">Tasarım ve Trendler</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Etkileşimli Araçlar</a>
+                <ul class="submenu">
+                    <li><a href="#termMatchingGame" class="nav-link">Terim Eşleştirme Oyunu</a></li>
+                    <li><a href="#quiz" class="nav-link">Kısa Test</a></li>
+                </ul>
+            </li>
+            <li><a href="#progress" class="nav-link">İlerleme</a></li>
+        </ul>
     </nav>
 
     <div class="container">
@@ -449,7 +517,7 @@
     </div>
 
     <footer>
-        <p>© 2024 Veri Tabanları ve Veri Yönetimi Öğrenme Uygulaması</p>
+        <p>© 2025 Veri Tabanları ve Veri Yönetimi Öğrenme Uygulaması</p>
     </footer>
 
     <script>
@@ -519,15 +587,15 @@
                 targetSection.classList.add('active');
             }
 
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            // Düzeltilmiş buton aktivasyon mantığı
-            const navButtons = document.querySelectorAll('nav button');
-            navButtons.forEach(button => {
-                const expectedAttributeValue = "showSection('" + sectionId + "')";
-                if (button.getAttribute('onclick') === expectedAttributeValue) {
-                    button.classList.add('active');
-                }
-            });
+            // Old button-based active state - will be handled by updateActiveLink for <a> tags
+            // document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            // const navButtons = document.querySelectorAll('nav button');
+            // navButtons.forEach(button => {
+            //     const expectedAttributeValue = "showSection('" + sectionId + "')";
+            //     if (button.getAttribute('onclick') === expectedAttributeValue) {
+            //         button.classList.add('active');
+            //     }
+            // });
 
             if (sectionId === 'termMatchingGame') initTermMatchingGame();
             if (sectionId === 'quiz') initQuiz();
@@ -850,10 +918,65 @@
             }
         }
 
+        // --- Navigasyon JS (kurumsal.html'den uyarlandı) ---
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('nav ul a.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) { 
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) { 
+                        event.preventDefault(); 
+                        const sectionId = href.substring(1);
+                        showSection(sectionId);
+                        updateActiveLink(this); 
+                    }
+                });
+            });
+            
+            document.querySelectorAll('nav ul li.dropdown > a.nav-link-dropdown').forEach(ddLink => {
+                ddLink.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                });
+            });
+        }
+
+        function updateActiveLink(target) { 
+            const allNavLinksAndToggles = document.querySelectorAll('nav ul a');
+            allNavLinksAndToggles.forEach(link => link.classList.remove('active'));
+
+            let activeLinkElement = null;
+
+            if (typeof target === 'string') { 
+                activeSectionId = target;
+                // For veritabani.html, direct section IDs are fine, no special game hub logic needed here
+                activeLinkElement = document.querySelector(`nav ul a.nav-link[href="#${activeSectionId}"]`);
+            } else if (target && target.nodeName === 'A') { 
+                activeLinkElement = target;
+            }
+
+            if (activeLinkElement) {
+                activeLinkElement.classList.add('active');
+                const parentSubmenu = activeLinkElement.closest('ul.submenu');
+                if (parentSubmenu) {
+                    const dropdownLi = parentSubmenu.closest('li.dropdown');
+                    if (dropdownLi) {
+                        const parentToggle = dropdownLi.querySelector('a.nav-link-dropdown');
+                        if (parentToggle) {
+                            parentToggle.classList.add('active');
+                        }
+                    }
+                }
+            }
+        }
+        
         // --- Başlangıç ---
         window.onload = () => {
             loadScores();
-            showSection('home');
+            initializeNavigation(); // Initialize new navigation
+            
+            const initialSectionId = window.location.hash ? window.location.hash.substring(1) : 'home';
+            showSection(initialSectionId);
+            updateActiveLink(initialSectionId); // Update active link for the initial section
         };
     </script>
 </body>

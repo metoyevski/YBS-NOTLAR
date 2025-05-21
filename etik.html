@@ -42,79 +42,76 @@
             font-size: 2.2em;
             font-weight: 600;
         }
-        .nav-container {
-            background: #2c3e50;
-            padding: 15px 0;
-            margin-bottom: 30px;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .nav-categories {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        .nav-category {
-            flex: 1 1 200px;
-            min-width: 200px;
-            max-width: 300px;
-            background: #34495e;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .category-title {
-            background: #1a5276;
+        nav {
+            background: #2c3e50; 
             color: #fff;
-            padding: 12px;
-            font-size: 1em;
-            font-weight: 600;
+            padding: 0; 
             text-align: center;
-            border-bottom: 2px solid #2980b9;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px; 
+            display: flex; 
+            justify-content: center; 
         }
-        .category-buttons {
-            padding: 10px;
+        nav ul { 
+            list-style: none;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex-wrap: wrap; 
+            justify-content: center;
         }
-        .category-buttons button {
-            background: #566573;
+        nav ul li { 
+            margin: 0;
+        }
+        nav ul li a { 
+            display: block;
             color: #fff;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
-            font-weight: 500;
-            text-align: left;
+            text-decoration: none;
+            padding: 0.8rem 1rem; 
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1em; 
+            font-weight: 500; 
+        }
+        nav ul li a:hover,
+        nav ul li a.active { 
+            background: #2980b9;
+            transform: translateY(-2px); 
+        }
+        nav ul li.dropdown {
+            position: relative; 
+        }
+        nav ul li.dropdown > a::after { 
+            content: ' ▾'; 
+            font-size: 0.8em;
+        }
+        nav ul ul.submenu {
+            display: none; 
+            position: absolute;
+            top: 100%; 
+            left: 0;
+            background-color: #34495e; 
+            padding: 0;
+            min-width: 250px;
+            z-index: 1000;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        nav ul li.dropdown:hover > ul.submenu {
+            display: block; 
+        }
+        nav ul ul.submenu li {
             width: 100%;
         }
-        .category-buttons button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        nav ul ul.submenu li a {
+            padding: 0.7rem 1rem;
+            white-space: nowrap; 
         }
-        .category-buttons button.active {
-            background: #2980b9;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            font-weight: bold;
+        nav ul ul.submenu li a:hover,
+        nav ul ul.submenu li a.active { 
+            background-color: #2980b9;
         }
         @media (max-width: 768px) {
-            .nav-categories {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .nav-category {
-                width: 100%;
-                max-width: 100%;
-            }
+            nav ul li a { padding: 0.8rem 0.5rem; font-size: 0.9em; }
         }
         .section, .content-section {
             display: none;
@@ -369,51 +366,46 @@
     <header>
         <h1>Bilişim Sistemlerinde Etik ve Sosyal Konular</h1>
     </header>
-    <div class="nav-container">
-        <nav class="nav-categories">
-            <div class="nav-category">
-                <div class="category-title">Ana Menü</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('home')">Ana Sayfa</button>
-                    <button onclick="location.href='index.html'">Ana Menüye Dön</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Temel Etik Kavramları</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('temelEtikKavramlarGenelBakis')">Genel Bakış</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Haklar & Sorumluluklar</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('bilgiVeMulkiyetHaklari')">Bilgi & Mülkiyet Hakları</button>
-                    <button onclick="showSection('hesapverebilirlik')">Hesap Verebilirlik</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Sistem & Yaşam Kalitesi</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('sistemKalitesi')">Sistem Kalitesi</button>
-                    <button onclick="showSection('yasamKalitesi')">Yaşam Kalitesi</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Ekstra</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('skandallar')">Skandallar</button>
-                    <button onclick="showSection('bilgiToplumundaEtik')">Bilgi Toplumunda Etik</button>
-                </div>
-            </div>
-            <div class="nav-category">
-                <div class="category-title">Etkileşimli Aktiviteler</div>
-                <div class="category-buttons">
-                    <button onclick="showSection('quiz')">Kısa Test</button>
-                    <button onclick="showSection('game')">Eşleştirme Oyunu</button>
-                </div>
-            </div>
-        </nav>
-    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">Ana Sayfa (Genel)</a></li>
+            <li><a href="#home" class="nav-link">Modül Girişi</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Temel Etik Kavramları</a>
+                <ul class="submenu">
+                    <li><a href="#temelEtikKavramlarGenelBakis" class="nav-link">Genel Bakış</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Haklar & Sorumluluklar</a>
+                <ul class="submenu">
+                    <li><a href="#bilgiVeMulkiyetHaklari" class="nav-link">Bilgi & Mülkiyet Hakları</a></li>
+                    <li><a href="#hesapverebilirlik" class="nav-link">Hesap Verebilirlik ve Kontrol</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Sistem & Yaşam Kalitesi</a>
+                <ul class="submenu">
+                    <li><a href="#sistemKalitesi" class="nav-link">Sistem Kalitesi</a></li>
+                    <li><a href="#yasamKalitesi" class="nav-link">Yaşam Kalitesi</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Ekstra</a>
+                <ul class="submenu">
+                    <li><a href="#skandallar" class="nav-link">Önemli Skandallar</a></li>
+                    <li><a href="#bilgiToplumundaEtik" class="nav-link">Bilgi Toplumunda Etik</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="nav-link-dropdown">Etkileşimli Araçlar</a>
+                <ul class="submenu">
+                    <li><a href="#game" class="nav-link">Eşleştirme Oyunu</a></li>
+                    <li><a href="#quiz" class="nav-link">Kısa Test</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
     <div class="container">
         <h1>Bilişim Sistemlerinde Etik ve Sosyal Konular</h1>
 
@@ -483,7 +475,7 @@
                 </ul>
             </div>
             <div style="text-align:center; margin: 20px 0;">
-                <img src="ETİK/etikdalga.png" alt="Etik Dalga Modeli" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <img src="ESKİ/ETİK/etikdalga.png" alt="Etik Dalga Modeli" style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                 <p style="font-size:0.95em; color:#555;">Etik-Sosyal-Politik Dalga Modeli</p>
             </div>
             <h2>Bilgi Toplumunun Beş Temel Ahlaki Boyutu</h2>
@@ -611,15 +603,7 @@
                     </li>
                 </ul>
 
-                <h4>Önleyici Tedbirler</h4>
-                <ul>
-                    <li>Düzenli molalar (20-20-20 kuralı: Her 20 dakikada bir, 20 feet uzağa, 20 saniye bakın)</li>
-                    <li>Ergonomik çalışma ortamı düzenlemesi</li>
-                    <li>Doğru oturuş ve duruş pozisyonları</li>
-                    <li>Düzenli egzersiz ve stretle hareketleri</li>
-                    <li>Dijital detoks molaları</li>
-                    <li>İş-yaşam dengesi için net sınırlar belirleme</li>
-                </ul>
+
             </div>
         </div>
         <div id="skandallar" class="section">
@@ -642,7 +626,7 @@
         </div>
     </div>
     <footer>
-        <p>© 2024 Bilişim Sistemlerinde Etik ve Sosyal Konular</p>
+        <p>© 2025 Bilişim Sistemlerinde Etik, Sosyal ve Politik Konular Öğrenme Uygulaması</p>
     </footer>
     <script>
         function showSection(sectionId) {
@@ -651,27 +635,19 @@
                 section.classList.remove('active');
             });
             
-            // Tüm navigasyon butonlarından active sınıfını kaldır
-            document.querySelectorAll('.nav-categories button').forEach(button => {
-                button.classList.remove('active');
-            });
-            
             // Hedef bölümü göster
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
-            
-            // Tıklanan navigasyon butonunu aktif yap
-            const clickedButton = document.querySelector(`.nav-categories button[onclick="showSection('${sectionId}')"]`);
-            if (clickedButton) {
-                clickedButton.classList.add('active');
-            }
         }
         
         // Sayfa yüklendiğinde "Temel Etik Kavramları - Genel Bakış" bölümünü göster
         document.addEventListener('DOMContentLoaded', () => {
-            showSection('temelEtikKavramlarGenelBakis'); 
+            initializeNavigation();
+            const initialSectionId = window.location.hash ? window.location.hash.substring(1) : 'temelEtikKavramlarGenelBakis';
+            showSection(initialSectionId); 
+            updateActiveLink(initialSectionId);
             initializeGame();
             loadEtikQuiz();
         });
@@ -1043,6 +1019,57 @@
             quizScore.correct = score;
             quizScore.total = quizData.length;
             quizScore.played = true;
+        }
+
+        // --- Navigasyon JS (kurumsal.html'den uyarlandı) ---
+        function initializeNavigation() {
+            const navLinks = document.querySelectorAll('nav ul a.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) { 
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) { 
+                        event.preventDefault(); 
+                        const sectionId = href.substring(1);
+                        showSection(sectionId);
+                        updateActiveLink(this); 
+                    }
+                });
+            });
+            
+            document.querySelectorAll('nav ul li.dropdown > a.nav-link-dropdown').forEach(ddLink => {
+                ddLink.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                });
+            });
+        }
+
+        function updateActiveLink(target) { 
+            const allNavLinksAndToggles = document.querySelectorAll('nav ul a');
+            allNavLinksAndToggles.forEach(link => link.classList.remove('active'));
+
+            let activeLinkElement = null;
+            let activeSectionId = ''; // Renamed from activeSectionId to avoid conflict with global if any
+
+            if (typeof target === 'string') { 
+                activeSectionId = target;
+                activeLinkElement = document.querySelector(`nav ul a.nav-link[href="#${activeSectionId}"]`);
+            } else if (target && target.nodeName === 'A') { 
+                activeLinkElement = target;
+            }
+
+            if (activeLinkElement) {
+                activeLinkElement.classList.add('active');
+                const parentSubmenu = activeLinkElement.closest('ul.submenu');
+                if (parentSubmenu) {
+                    const dropdownLi = parentSubmenu.closest('li.dropdown');
+                    if (dropdownLi) {
+                        const parentToggle = dropdownLi.querySelector('a.nav-link-dropdown');
+                        if (parentToggle) {
+                            parentToggle.classList.add('active');
+                        }
+                    }
+                }
+            }
         }
     </script>
 </body>

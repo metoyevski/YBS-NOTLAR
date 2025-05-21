@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN ve DNS Farkları Öğrenme Uygulaması</title>
+    <style>
+        /* Genel Stiller */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            flex-grow: 1;
+        }
+
+        header {
+            background: #0056b3; /* YBS ile uyumlu bir mavi tonu */
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+            border-bottom: #0779e4 3px solid;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        nav {
+            background: #333;
+            color: #fff;
+            padding: 0.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav button {
+            background: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav button:hover, nav button.active {
+            background: #0056b3;
+        }
+
+        .section {
+            display: none; /* Başlangıçta tüm bölümler gizli */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Sözlük Stilleri */
+        #glossarySearch {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .glossary-item {
+            background-color: #eef;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #0056b3;
+            border-radius: 4px;
+        }
+        .glossary-item strong {
+            color: #003d80;
+        }
+
+        /* Bileşen Tanıma Oyunu Stilleri */
+        .component-game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .drag-area, .drop-area {
+            border: 2px dashed #ccc;
+            padding: 15px;
+            min-height: 100px;
+            border-radius: 5px;
+        }
+        .drag-area h3, .drop-area h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .draggable {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: grab;
+            text-align: center;
+            display: inline-block;
+        }
+        .drop-zone {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            min-height: 40px;
+            border-radius: 4px;
+        }
+        .drop-zone.over {
+            background-color: #e0e0e0;
+            border-style: solid;
+        }
+
+        /* Senaryo Bazlı Karşılaştırma Stilleri */
+        .scenario {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .scenario p {
+            margin-bottom: 10px;
+        }
+        .scenario-buttons button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .scenario-buttons button:hover {
+            opacity: 0.9;
+        }
+        .scenario-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        /* Test Stilleri */
+        .quiz-question {
+            margin-bottom: 15px;
+        }
+        .quiz-options label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        /* Geri Bildirim Stilleri */
+        .feedback {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Skorlama Stilleri */
+        #scoreBoard {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #scoreBoard h3 {
+            margin-top: 0;
+        }
+
+        /* Ek Özellikler */
+        .info-section {
+            background-color: #f0f8ff; /* AliceBlue */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .info-section ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        /* Mobil Uyum */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+            nav button {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+            .component-game-container {
+                flex-direction: column;
+            }
+            .drag-area, .drop-area {
+                width: auto; /* Tam genişlik */
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            color: #fff;
+            margin-top: auto; /* İçeriği yukarı iter */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VPN ve DNS Farkları Öğrenme Uygulaması</h1>
+    </header>
+
+    <nav>
+        <button onclick="showSection('home')">Ana Sayfa</button>
+        <button onclick="showSection('glossary')">Kavramlar Sözlüğü</button>
+        <button onclick="showSection('componentGame')">Bileşen Tanıma Oyunu</button>
+        <button onclick="showSection('scenarioComparison')">Senaryo Karşılaştırma</button>
+        <button onclick="showSection('quiz')">Kısa Test</button>
+        <button onclick="showSection('protocolsInfo')">Protokoller & Türler</button>
+        <button onclick="showSection('resources')">Ek Kaynaklar</button>
+        <button onclick="showSection('progress')">İlerleme</button>
+    </nav>
+
+    <div class="container">
+        <!-- Ana Sayfa Bölümü -->
+        <div id="home" class="section active">
+            <h2>Hoş Geldiniz!</h2>
+            <p>Bu uygulama, Yönetim Bilişim Sistemleri (YBS) sınavlarına hazırlanan öğrencilerin VPN (Virtual Private Network) ve DNS (Domain Name System) teknolojileri konusundaki bilgilerini pekiştirmelerine yardımcı olmak için tasarlanmıştır.</p>
+            <p>Yukarıdaki menüden istediğiniz bölüme geçiş yapabilirsiniz. İyi öğrenmeler!</p>
+        </div>
+
+        <!-- Kavramlar Sözlüğü Bölümü -->
+        <div id="glossary" class="section">
+            <h2>VPN ve DNS Temel Kavramlar Sözlüğü</h2>
+            <input type="text" id="glossarySearch" onkeyup="filterGlossary()" placeholder="Terim ara...">
+            <div id="glossaryContent"></div>
+        </div>
+
+        <!-- Bileşen Tanıma Oyunu Bölümü -->
+        <div id="componentGame" class="section">
+            <h2>VPN ve DNS Bileşenlerini Tanıma Oyunu</h2>
+            <p>Aşağıdaki bileşenleri ait oldukları teknolojiye (VPN veya DNS) sürükleyip bırakın veya doğru kutucuklara eşleştirin.</p>
+            <div class="component-game-container">
+                <div class="drag-area">
+                    <h3>Sürüklenecek Bileşenler</h3>
+                    <div id="draggableComponents">
+                        <!-- Draggable bileşenler JS ile eklenecek -->
+                    </div>
+                </div>
+                <div class="drop-area">
+                    <h3>VPN Bileşenleri</h3>
+                    <div id="vpnDropZone" class="drop-zone" data-type="vpn">
+                        Eşleşenleri buraya sürükleyin
+                    </div>
+                    <h3>DNS Bileşenleri</h3>
+                    <div id="dnsDropZone" class="drop-zone" data-type="dns">
+                        Eşleşenleri buraya sürükleyin
+                    </div>
+                </div>
+            </div>
+            <button onclick="checkComponentGameAnswers()">Cevapları Kontrol Et</button>
+            <button onclick="resetComponentGame()">Oyunu Sıfırla</button>
+            <div id="componentGameFeedback" class="feedback"></div>
+        </div>
+
+        <!-- Senaryo Bazlı Karşılaştırma Bölümü -->
+        <div id="scenarioComparison" class="section">
+            <h2>Senaryo Bazlı Karşılaştırma</h2>
+            <div id="scenarioContainer">
+                <!-- Senaryolar JS ile yüklenecek -->
+            </div>
+            <div id="scenarioFeedback" class="feedback"></div>
+            <button onclick="nextScenario()" style="display:none;" id="nextScenarioButton">Sonraki Senaryo</button>
+        </div>
+
+        <!-- Kısa Test Bölümü -->
+        <div id="quiz" class="section">
+            <h2>Kısa Test: VPN ve DNS Farkları</h2>
+            <div id="quizContainer">
+                <!-- Sorular JS ile yüklenecek -->
+            </div>
+            <button onclick="submitQuiz()">Testi Bitir</button>
+            <div id="quizFeedback" class="feedback"></div>
+            <div id="quizScore"></div>
+        </div>
+
+        <!-- Protokoller ve Türler Bilgi Bölümü -->
+        <div id="protocolsInfo" class="section">
+            <h2>VPN Protokolleri ve DNS Türleri</h2>
+            <div class="info-section">
+                <h3>VPN Protokolleri</h3>
+                <ul>
+                    <li><strong>OpenVPN:</strong> Açık kaynaklı, yüksek derecede yapılandırılabilir ve güvenli bir protokoldür. TCP veya UDP üzerinden çalışabilir.</li>
+                    <li><strong>WireGuard:</strong> Modern, hızlı ve basit bir VPN protokolüdür. Daha az kod satırına sahip olmasıyla güvenlik ve performans avantajları sunar.</li>
+                    <li><strong>IKEv2/IPsec:</strong> Genellikle mobil cihazlarda tercih edilen, kararlı ve hızlı bir protokoldür. Bağlantı kesintilerinden sonra hızlıca yeniden bağlanabilir.</li>
+                    <li><strong>L2TP/IPsec:</strong> IPsec ile birlikte kullanıldığında güvenlik sağlayan bir tünelleme protokolüdür. OpenVPN'e göre daha yavaş olabilir.</li>
+                    <li><strong>PPTP:</strong> Eski ve güvensiz kabul edilen bir protokoldür. Kullanımı önerilmez.</li>
+                </ul>
+            </div>
+            <div class="info-section">
+                <h3>DNS Türleri</h3>
+                <ul>
+                    <li><strong>Recursive DNS Resolver (Çözümleyici):</strong> Kullanıcıdan gelen alan adı sorgusunu alır ve bu sorguyu çözmek için diğer DNS sunucularıyla iletişim kurar. Sonuç olarak IP adresini kullanıcıya döndürür. Genellikle İSS'ler tarafından sağlanır.</li>
+                    <li><strong>Authoritative DNS Server (Yetkili Sunucu):</strong> Belirli bir alan adı (domain) için kesin DNS kayıtlarını tutan sunucudur. Bir alan adının IP adresini veya diğer DNS bilgilerini sağlar.</li>
+                    <li><strong>Root DNS Server (Kök Sunucu):</strong> DNS hiyerarşisinin en tepesinde yer alır. TLD (Top-Level Domain - .com, .org, .net gibi) sunucularının adreslerini bilir ve çözümleyicileri bu sunuculara yönlendirir.</li>
+                    <li><strong>TLD DNS Server (Üst Düzey Alan Adı Sunucusu):</strong> .com, .org, .net gibi üst düzey alan adlarından sorumludur. Örneğin, "example.com" için ".com" TLD sunucusu, "example.com"un yetkili sunucusunun adresini bilir.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ek Kaynaklar Bölümü -->
+        <div id="resources" class="section">
+            <h2>Güncel Gizlilik ve Sansürle Mücadele Trendleri</h2>
+            <p>Aşağıdaki bağlantılar, dijital gizlilik, güvenlik ve sansürle mücadele konularında daha fazla bilgi edinmenize yardımcı olabilir:</p>
+            <ul>
+                <li><a href="https://www.eff.org/" target="_blank">Electronic Frontier Foundation (EFF)</a> - Dijital haklar savunucusu.</li>
+                <li><a href="https://www.torproject.org/" target="_blank">The Tor Project</a> - Anonim iletişim sağlayan yazılımlar.</li>
+                <li><a href="https://www.privacytools.io/" target="_blank">PrivacyTools</a> - Gizlilik odaklı araçlar ve hizmetler önerileri.</li>
+                <li><a href="https://www.internethaber.com/internet-yasaklari" target="_blank">Türkiye'de İnternet Sansürü ile İlgili Haberler (Örnek Bağlantı)</a></li>
+            </ul>
+            <p><em>Not: Bu bağlantılar bilgilendirme amaçlıdır ve içeriklerinden uygulama sorumlu değildir.</em></p>
+        </div>
+        
+        <!-- İlerleme Takibi Bölümü -->
+        <div id="progress" class="section">
+            <h2>Skorlama ve İlerleme Takibi</h2>
+            <div id="scoreBoard">
+                <h3>Genel Başarı Durumu</h3>
+                <p>Bileşen Oyunu Skoru: <span id="componentGameScore">0</span>/<span id="componentGameTotal">0</span></p>
+                <p>Senaryo Karşılaştırma Skoru: <span id="scenarioScore">0</span>/<span id="scenarioTotal">0</span></p>
+                <p>Kısa Test Skoru: <span id="quizTotalScore">0</span>/<span id="quizTotalQuestions">0</span></p>
+                <hr>
+                <p><strong>Toplam Başarı: <span id="overallScore">0</span>%</strong></p>
+            </div>
+            <button onclick="resetProgress()">Tüm İlerlemeyi Sıfırla</button>
+            <h3>Önceki Denemeler</h3>
+            <p>Bu özellik gelecekteki bir sürümde eklenebilir veya daha detaylı bir lokal depolama ile yönetilebilir.</p>
+            <p>Şimdilik, yanlış yaptığınız bölümleri menüden seçerek tekrar çalışabilirsiniz.</p>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2024 VPN & DNS Öğrenme Uygulaması - YBS Öğrencileri İçin</p>
+    </footer>
+
+    <script>
+        // --- Global Değişkenler ve Veriler ---
+        const glossaryData = [
+            { term: "IP Adresi", definition: "İnternete bağlı her cihazın sahip olduğu, noktalarla ayrılmış sayısal bir kimliktir (örn: 192.168.1.1)." },
+            { term: "VPN (Virtual Private Network)", definition: "Sanal Özel Ağ. İnternet bağlantınızı şifreleyerek ve IP adresinizi gizleyerek güvenli ve özel bir bağlantı oluşturur." },
+            { term: "DNS (Domain Name System)", definition: "Alan Adı Sistemi. İnsanların okuyabildiği alan adlarını (örn: google.com) bilgisayarların anlayabildiği IP adreslerine çevirir." },
+            { term: "IP Tünelleme", definition: "VPN'lerin kullandığı bir tekniktir. Veri paketlerini başka bir paket içine sararak (kapsülleyerek) güvenli bir kanal üzerinden iletilmesini sağlar." },
+            { term: "Şifreleme (Encryption)", definition: "Veriyi yetkisiz erişime karşı okunamaz hale getirme işlemidir. VPN'ler trafiği şifreler." },
+            { term: "DNS Sunucusu", definition: "Alan adı çözümleme isteklerini işleyen sunucudur. Recursive veya Authoritative olabilir." },
+            { term: "IP Yönlendirme (Routing)", definition: "Veri paketlerinin ağ üzerinde hedefine ulaşması için izleyeceği yolu belirleme işlemidir." },
+            { term: "Port", definition: "Bir bilgisayardaki belirli bir uygulama veya hizmete yönelik sanal bir bağlantı noktasıdır (örn: HTTP için 80, HTTPS için 443)." },
+            { term: "Protokol", definition: "İki veya daha fazla cihazın iletişim kurmasını sağlayan kurallar ve standartlar bütünüdür (örn: TCP/IP, HTTP, OpenVPN)." },
+            { term: "VPN İstemcisi (VPN Client)", definition: "Kullanıcının cihazına kurulan ve VPN sunucusuna bağlantı başlatan yazılımdır." },
+            { term: "VPN Sunucusu (VPN Server)", definition: "VPN istemcisinden gelen bağlantıları kabul eden ve şifreli tüneli oluşturan sunucudur." },
+            { term: "DNS Çözümleyici (DNS Resolver)", definition: "Bir alan adının IP adresini bulmak için DNS sorgu sürecini başlatan ve yöneten sunucudur." },
+            { term: "Yetkili DNS Sunucusu (Authoritative DNS Server)", definition: "Belirli bir alan adı için DNS kayıtlarını barındıran ve sorgulara nihai yanıtı veren sunucudur." },
+            { term: "Kök DNS Sunucusu (Root DNS Server)", definition: "DNS hiyerarşisinin en üstünde yer alan ve TLD sunucularına yönlendirme yapan sunuculardır." }
+        ];
+
+        const componentData = [
+            { name: "VPN İstemcisi", type: "vpn", matched: false },
+            { name: "Şifreli Tünel", type: "vpn", matched: false },
+            { name: "VPN Sunucusu", type: "vpn", matched: false },
+            { name: "DNS Çözümleyici", type: "dns", matched: false },
+            { name: "Kök Sunucu", type: "dns", matched: false },
+            { name: "Yetkili DNS Sunucusu", type: "dns", matched: false },
+            { name: "IP Adresi Sorgulama", type: "dns", matched: false },
+            { name: "Veri Şifreleme", type: "vpn", matched: false }
+        ];
+        let currentDraggable = null;
+
+
+        const scenarios = [
+            {
+                id: 1,
+                text: "Halka açık bir Wi-Fi ağında (kafe, havaalanı) bankacılık işlemleri yapmak istiyorsunuz. Verilerinizin güvende olması çok önemli.",
+                correct: "VPN",
+                explanation: "Halka açık Wi-Fi ağları genellikle güvensizdir. VPN, tüm internet trafiğinizi şifreleyerek bu ağlardaki potansiyel dinleyicilere karşı koruma sağlar. DNS tek başına trafiğinizi şifrelemez, sadece alan adı çözümlemesi yapar."
+            },
+            {
+                id: 2,
+                text: "Belirli bir web sitesine erişmeye çalışıyorsunuz ancak sitenin alan adı bir türlü IP adresine çözülemiyor veya çok yavaş çözülüyor.",
+                correct: "DNS",
+                explanation: "Bu sorun genellikle mevcut DNS sunucunuzla ilgilidir. Farklı bir DNS sunucusu (örn: Google DNS, Cloudflare DNS) kullanmak, alan adı çözümleme hızını ve güvenilirliğini artırabilir. VPN bu durumda doğrudan bir çözüm sunmaz, ancak bazı VPN'ler kendi DNS sunucularını kullanır."
+            },
+            {
+                id: 3,
+                text: "Yaşadığınız ülkede bazı haber sitelerine veya sosyal medya platformlarına erişim engellenmiş durumda. Bu sitelere erişmek istiyorsunuz.",
+                correct: "VPN",
+                explanation: "VPN, IP adresinizi ve dolayısıyla coğrafi konumunuzu değiştirerek internet trafiğinizi farklı bir ülke üzerinden yönlendirir. Bu sayede, ülkenizde engellenen sitelere erişebilirsiniz. DNS değiştirmek bazen basit engellemeleri aşabilir ancak daha kapsamlı sansür için VPN daha etkilidir."
+            },
+            {
+                id: 4,
+                text: "İnternet servis sağlayıcınızın (İSS) hangi siteleri ziyaret ettiğinizi takip etmesini istemiyorsunuz.",
+                correct: "VPN",
+                explanation: "VPN, tüm internet trafiğinizi şifrelediği için İSS'niz sadece bir VPN sunucusuna bağlandığınızı görür, ancak hangi sitelere girdiğinizi veya ne yaptığınızı göremez. DNS sorgularınız da VPN tüneli üzerinden gittiği için İSS'niz tarafından görülmez (eğer VPN kendi DNS'ini kullanıyorsa veya DNS sızıntısı yoksa)."
+            },
+            {
+                id: 5,
+                text: "Bir web sitesinin yüklenme hızını genel olarak artırmak istiyorsunuz, özellikle sık ziyaret ettiğiniz siteler için.",
+                correct: "DNS",
+                explanation: "Daha hızlı bir DNS sunucusu kullanmak, alan adlarının IP adreslerine daha çabuk çevrilmesini sağlayarak web sitelerinin yüklenme süresini bir miktar azaltabilir. VPN genellikle bağlantıya ek bir katman eklediği için hızı bir miktar düşürebilir, ancak güvenlik ve gizlilik sağlar."
+            }
+        ];
+        let currentScenarioIndex = 0;
+
+        const quizQuestions = [
+            {
+                question: "Aşağıdakilerden hangisi öncelikli olarak internet trafiğini şifrelemek için kullanılır?",
+                options: ["DNS", "VPN", "IP Yönlendirme", "Port"],
+                answer: "VPN",
+                explanation: "VPN'in temel işlevlerinden biri, kullanıcı ile VPN sunucusu arasındaki tüm internet trafiğini şifrelemektir."
+            },
+            {
+                question: "Bir web sitesinin alan adını (örn: www.example.com) IP adresine (örn: 93.184.216.34) çeviren sistem hangisidir?",
+                options: ["VPN", "Şifreleme Protokolü", "DNS", "IP Tünelleme"],
+                answer: "DNS",
+                explanation: "DNS (Domain Name System), alan adlarını IP adreslerine ve tersini çevirmekle görevlidir."
+            },
+            {
+                question: "Coğrafi kısıtlamaları aşmak ve engellenen web sitelerine erişmek için genellikle hangisi daha etkilidir?",
+                options: ["Sadece DNS değiştirmek", "VPN kullanmak", "Tarayıcı önbelleğini temizlemek", "Farklı bir tarayıcı kullanmak"],
+                answer: "VPN kullanmak",
+                explanation: "VPN, sanal konumunuzu değiştirerek coğrafi kısıtlamaları ve sansürü aşmada çok etkilidir. DNS değiştirmek bazen işe yarasa da VPN kadar kapsamlı değildir."
+            },
+            {
+                question: "Hangisi verilerinizi bir 'tünel' içinden geçirerek korur?",
+                options: ["DNS Sunucusu", "IP Tünelleme (VPN'de kullanılır)", "Recursive DNS", "Authoritative DNS"],
+                answer: "IP Tünelleme (VPN'de kullanılır)",
+                explanation: "IP Tünelleme, VPN'lerin veri paketlerini güvenli bir kanal üzerinden iletmek için kullandığı bir yöntemdir."
+            }
+        ];
+        let userQuizAnswers = [];
+
+        let scores = {
+            componentGame: { correct: 0, total: componentData.length },
+            scenarioComparison: { correct: 0, total: scenarios.length },
+            quiz: { correct: 0, total: quizQuestions.length }
+        };
+
+        // --- Sayfa Yönlendirme ---
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            const navButtons = document.querySelectorAll('nav button');
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.toLowerCase().includes(sectionId.toLowerCase()) || 
+                    (sectionId === 'home' && button.textContent === 'Ana Sayfa') ||
+                    (sectionId === 'glossary' && button.textContent === 'Kavramlar Sözlüğü') ||
+                    (sectionId === 'componentGame' && button.textContent === 'Bileşen Tanıma Oyunu') ||
+                    (sectionId === 'scenarioComparison' && button.textContent === 'Senaryo Karşılaştırma') ||
+                    (sectionId === 'quiz' && button.textContent === 'Kısa Test') ||
+                    (sectionId === 'protocolsInfo' && button.textContent === 'Protokoller & Türler') ||
+                    (sectionId === 'resources' && button.textContent === 'Ek Kaynaklar') ||
+                    (sectionId === 'progress' && button.textContent === 'İlerleme')
+                ) {
+                    button.classList.add('active');
+                }
+            });
+
+            // Bölüme özel başlatma fonksiyonları
+            if (sectionId === 'glossary') initGlossary();
+            if (sectionId === 'componentGame') initComponentGame();
+            if (sectionId === 'scenarioComparison') initScenarios();
+            if (sectionId === 'quiz') initQuiz();
+            if (sectionId === 'progress') updateScoreBoard();
+        }
+
+        // --- Sözlük Fonksiyonları ---
+        function initGlossary() {
+            renderGlossary(glossaryData);
+        }
+
+        function renderGlossary(data) {
+            const glossaryContent = document.getElementById('glossaryContent');
+            glossaryContent.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'glossary-item';
+                div.innerHTML = `<strong>${item.term}:</strong> ${item.definition}`;
+                glossaryContent.appendChild(div);
+            });
+        }
+
+        function filterGlossary() {
+            const searchTerm = document.getElementById('glossarySearch').value.toLowerCase();
+            const filteredData = glossaryData.filter(item => 
+                item.term.toLowerCase().includes(searchTerm) || 
+                item.definition.toLowerCase().includes(searchTerm)
+            );
+            renderGlossary(filteredData);
+        }
+
+        // --- Bileşen Tanıma Oyunu Fonksiyonları ---
+        function initComponentGame() {
+            const draggableContainer = document.getElementById('draggableComponents');
+            draggableContainer.innerHTML = ''; // Önce temizle
+            componentData.forEach(item => item.matched = false); // Eşleşmeleri sıfırla
+            
+            // Bileşenleri karıştır
+            const shuffledComponents = [...componentData].sort(() => Math.random() - 0.5);
+
+            shuffledComponents.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'draggable';
+                div.textContent = item.name;
+                div.draggable = true;
+                div.id = `comp-${item.name.replace(/\s+/g, '-')}`; // ID için boşlukları tire yap
+                div.dataset.type = item.type;
+                div.addEventListener('dragstart', dragStart);
+                draggableContainer.appendChild(div);
+            });
+
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                zone.innerHTML = 'Eşleşenleri buraya sürükleyin'; // Başlangıç metnini ayarla
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('dragleave', dragLeave);
+                zone.addEventListener('drop', drop);
+            });
+            document.getElementById('componentGameFeedback').innerHTML = '';
+            scores.componentGame.correct = 0; // Skoru sıfırla
+            updateScoreBoard();
+        }
+        
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+            e.dataTransfer.effectAllowed = 'move';
+            currentDraggable = e.target;
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('over');
+        }
+        
+        function dragLeave(e) {
+            this.classList.remove('over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('over');
+            const id = e.dataTransfer.getData('text/plain');
+            const draggableElement = document.getElementById(id);
+            const dropZoneType = this.dataset.type;
+
+            if (draggableElement && currentDraggable) {
+                const component = componentData.find(c => `comp-${c.name.replace(/\s+/g, '-')}` === id);
+                if (component) {
+                    if (this.textContent === 'Eşleşenleri buraya sürükleyin') {
+                        this.textContent = ''; // İlk eleman eklenirken metni temizle
+                    }
+                    this.appendChild(draggableElement);
+                    component.matchedTo = dropZoneType; // Hangi zone'a bırakıldığını kaydet
+                }
+            }
+            currentDraggable = null;
+        }
+        
+        function checkComponentGameAnswers() {
+            let correctCount = 0;
+            const feedbackDiv = document.getElementById('componentGameFeedback');
+            feedbackDiv.innerHTML = '';
+
+            const placedItems = document.querySelectorAll('.drop-zone .draggable');
+            let allPlacedCorrectly = true;
+
+            componentData.forEach(item => {
+                const element = document.getElementById(`comp-${item.name.replace(/\s+/g, '-')}`);
+                if (element && element.parentElement.classList.contains('drop-zone')) {
+                    const parentZoneType = element.parentElement.dataset.type;
+                    if (item.type === parentZoneType) {
+                        correctCount++;
+                        element.style.backgroundColor = '#28a745'; // Yeşil
+                    } else {
+                        element.style.backgroundColor = '#dc3545'; // Kırmızı
+                        allPlacedCorrectly = false;
+                    }
+                } else { // Eğer sürüklenmemişse
+                    allPlacedCorrectly = false;
+                }
+            });
+            
+            scores.componentGame.correct = correctCount;
+            updateScoreBoard();
+
+            if (correctCount === componentData.length && allPlacedCorrectly) {
+                feedbackDiv.textContent = `Tebrikler! Tüm ${componentData.length} bileşeni doğru yerleştirdiniz.`;
+                feedbackDiv.className = 'feedback correct';
+            } else if (placedItems.length < componentData.length) {
+                feedbackDiv.textContent = `Lütfen tüm bileşenleri yerleştirin. Şu ana kadar ${correctCount} doğru.`;
+                feedbackDiv.className = 'feedback incorrect';
+            }
+            else {
+                feedbackDiv.textContent = `${componentData.length} bileşenden ${correctCount} tanesini doğru yerleştirdiniz. Yanlış olanlar kırmızı ile işaretlendi.`;
+                feedbackDiv.className = 'feedback incorrect';
+            }
+        }
+
+        function resetComponentGame() {
+            initComponentGame(); // Oyunu yeniden başlatır
+        }
+
+
+        // --- Senaryo Karşılaştırma Fonksiyonları ---
+        function initScenarios() {
+            currentScenarioIndex = 0;
+            scores.scenarioComparison.correct = 0;
+            loadScenario(currentScenarioIndex);
+            document.getElementById('nextScenarioButton').style.display = 'none';
+            updateScoreBoard();
+        }
+
+        function loadScenario(index) {
+            const scenarioContainer = document.getElementById('scenarioContainer');
+            const feedbackDiv = document.getElementById('scenarioFeedback');
+            feedbackDiv.innerHTML = '';
+            feedbackDiv.className = 'feedback';
+
+            if (index < scenarios.length) {
+                const scenario = scenarios[index];
+                scenarioContainer.innerHTML = `
+                    <div class="scenario" data-id="${scenario.id}">
+                        <p><strong>Senaryo ${index + 1}:</strong> ${scenario.text}</p>
+                        <div class="scenario-buttons">
+                            <button onclick="checkScenarioAnswer('${scenario.id}', 'VPN')">VPN Daha Uygun</button>
+                            <button onclick="checkScenarioAnswer('${scenario.id}', 'DNS')">DNS Daha Uygun</button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('nextScenarioButton').style.display = 'none';
+            } else {
+                scenarioContainer.innerHTML = "<p>Tüm senaryolar tamamlandı! Skorunuzu İlerleme bölümünde görebilirsiniz.</p>";
+                document.getElementById('nextScenarioButton').style.display = 'none';
+                updateScoreBoard();
+            }
+        }
+
+        function checkScenarioAnswer(scenarioId, userAnswer) {
+            const scenario = scenarios.find(s => s.id == scenarioId);
+            const feedbackDiv = document.getElementById('scenarioFeedback');
+            const scenarioButtons = document.querySelector(`.scenario[data-id='${scenarioId}'] .scenario-buttons`);
+            
+            if (scenario) {
+                if (userAnswer === scenario.correct) {
+                    feedbackDiv.innerHTML = `<strong>Doğru!</strong> ${scenario.explanation} <br/>🎉 Tebrikler!`;
+                    feedbackDiv.className = 'feedback correct';
+                    scores.scenarioComparison.correct++;
+                } else {
+                    feedbackDiv.innerHTML = `<strong>Yanlış.</strong> Doğru cevap ${scenario.correct} olmalıydı. <br/><strong>Açıklama:</strong> ${scenario.explanation}`;
+                    feedbackDiv.className = 'feedback incorrect';
+                }
+                // Butonları devre dışı bırak veya gizle
+                scenarioButtons.innerHTML = `<p>Cevabınız: ${userAnswer}</p>`;
+                document.getElementById('nextScenarioButton').style.display = 'block';
+                updateScoreBoard();
+            }
+        }
+
+        function nextScenario() {
+            currentScenarioIndex++;
+            loadScenario(currentScenarioIndex);
+        }
+
+        // --- Kısa Test Fonksiyonları ---
+        function initQuiz() {
+            const quizContainer = document.getElementById('quizContainer');
+            quizContainer.innerHTML = '';
+            userQuizAnswers = [];
+            scores.quiz.correct = 0;
+
+            quizQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+                let optionsHtml = '';
+                q.options.forEach(opt => {
+                    optionsHtml += `
+                        <label>
+                            <input type="radio" name="question${index}" value="${opt}"> ${opt}
+                        </label>
+                    `;
+                });
+                questionDiv.innerHTML = `
+                    <p><strong>Soru ${index + 1}:</strong> ${q.question}</p>
+                    <div class="quiz-options">${optionsHtml}</div>
+                    <div id="feedback-q${index}" class="feedback"></div>
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+            document.getElementById('quizFeedback').innerHTML = '';
+            document.getElementById('quizScore').innerHTML = '';
+            updateScoreBoard();
+        }
+
+        function submitQuiz() {
+            scores.quiz.correct = 0;
+            userQuizAnswers = [];
+            const feedbackDiv = document.getElementById('quizFeedback');
+            
+            quizQuestions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                const questionFeedback = document.getElementById(`feedback-q${index}`);
+                if (selectedOption) {
+                    userQuizAnswers[index] = selectedOption.value;
+                    if (selectedOption.value === q.answer) {
+                        scores.quiz.correct++;
+                        questionFeedback.innerHTML = `Doğru! 🎉 ${q.explanation}`;
+                        questionFeedback.className = 'feedback correct';
+                    } else {
+                        questionFeedback.innerHTML = `Yanlış. Doğru cevap: ${q.answer}. <br/> ${q.explanation}`;
+                        questionFeedback.className = 'feedback incorrect';
+                    }
+                } else {
+                    userQuizAnswers[index] = null; // Cevaplanmamış
+                    questionFeedback.innerHTML = `Bu soru cevaplanmadı. Doğru cevap: ${q.answer}. <br/> ${q.explanation}`;
+                    questionFeedback.className = 'feedback incorrect';
+                }
+            });
+
+            const totalQuestions = quizQuestions.length;
+            document.getElementById('quizScore').innerHTML = `
+                <h3>Test Sonucu</h3>
+                <p>Toplam ${totalQuestions} sorudan ${scores.quiz.correct} tanesini doğru cevapladınız.</p>
+            `;
+            if (scores.quiz.correct === totalQuestions) {
+                 feedbackDiv.innerHTML = "Harika! Testteki tüm soruları doğru yanıtladınız!";
+                 feedbackDiv.className = 'feedback correct';
+            } else {
+                 feedbackDiv.innerHTML = "Test tamamlandı. Sonuçlarınızı yukarıda ve cevapların yanında görebilirsiniz.";
+                 feedbackDiv.className = 'feedback'; // Nötr
+            }
+            updateScoreBoard();
+        }
+
+
+        // --- Skorlama ve İlerleme Fonksiyonları ---
+        function updateScoreBoard() {
+            // Component Game
+            document.getElementById('componentGameScore').textContent = scores.componentGame.correct;
+            document.getElementById('componentGameTotal').textContent = scores.componentGame.total;
+            // Scenario Comparison
+            document.getElementById('scenarioScore').textContent = scores.scenarioComparison.correct;
+            document.getElementById('scenarioTotal').textContent = scenarios.length; // Her zaman toplam senaryo sayısı
+            // Quiz
+            document.getElementById('quizTotalScore').textContent = scores.quiz.correct;
+            document.getElementById('quizTotalQuestions').textContent = quizQuestions.length;
+
+            let totalCorrect = scores.componentGame.correct + scores.scenarioComparison.correct + scores.quiz.correct;
+            let totalPossible = scores.componentGame.total + scenarios.length + quizQuestions.length;
+            
+            let overallPercentage = 0;
+            if (totalPossible > 0) {
+                overallPercentage = ((totalCorrect / totalPossible) * 100).toFixed(0);
+            }
+            document.getElementById('overallScore').textContent = overallPercentage;
+
+            // LocalStorage'a kaydet
+            localStorage.setItem('learningAppScores', JSON.stringify(scores));
+        }
+
+        function loadScores() {
+            const savedScores = localStorage.getItem('learningAppScores');
+            if (savedScores) {
+                scores = JSON.parse(savedScores);
+            }
+            // Total değerlerinin güncel kalmasını sağla (eğer veri yapıları değişirse diye)
+            scores.componentGame.total = componentData.length;
+            scores.scenarioComparison.total = scenarios.length;
+            scores.quiz.total = quizQuestions.length;
+        }
+        
+        function resetProgress() {
+            if (confirm("Tüm ilerlemenizi ve skorlarınızı sıfırlamak istediğinizden emin misiniz?")) {
+                scores = {
+                    componentGame: { correct: 0, total: componentData.length },
+                    scenarioComparison: { correct: 0, total: scenarios.length },
+                    quiz: { correct: 0, total: quizQuestions.length }
+                };
+                localStorage.removeItem('learningAppScores');
+                updateScoreBoard();
+                // Aktif bölümleri de sıfırla/yeniden başlat
+                if (document.getElementById('componentGame').classList.contains('active')) initComponentGame();
+                if (document.getElementById('scenarioComparison').classList.contains('active')) initScenarios();
+                if (document.getElementById('quiz').classList.contains('active')) initQuiz();
+                alert("İlerlemeniz sıfırlandı.");
+            }
+        }
+
+        // --- Uygulama Başlangıcı ---
+        window.onload = () => {
+            loadScores(); // Kayıtlı skorları yükle
+            showSection('home'); // Ana sayfayı göster
+            // Gerekirse diğer bölümleri de başlangıçta hazırla
+            initGlossary(); 
+            // Diğer init fonksiyonları ilgili bölüme tıklandığında çağrılacak
+        };
+
+    </script>
+</body>
+</html>

@@ -1692,6 +1692,12 @@
                     item.targets.forEach(selector => {
                         document.querySelectorAll(selector).forEach(el => {
                              el.classList.add('hierarchy-highlight-active');
+                             // Scroll the highlighted element so it starts 45px from the top of the viewport
+                             if (el.classList.contains('hierarchy-level') || el.id === 'dataHierarchyTextTitle') {
+                                const elementTopInDocument = window.scrollY + el.getBoundingClientRect().top;
+                                const targetScrollY = elementTopInDocument + 55; // Changed from -75 to -45
+                                window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+                             }
                         });
                     });
                     activeFound = true;
